@@ -1,4 +1,5 @@
 #include <iostream>
+#include <array> 
  
 //Definitions for 8 bit type and 16 bit type 
 typedef uint8_t Byte; 
@@ -21,7 +22,7 @@ struct Memory{
 
 struct CPU{
 
-    Memory mem; 
+    
 
     Rock ProgramCounter;
     Rock StackPointer;
@@ -43,14 +44,34 @@ struct CPU{
     Byte neg: 1; 
     
 
-    void reset(Memory &mem){
+    void Reset(Memory &mem){
         carry = 0, zero = 0, interrDisable = 0, decMode = 0, brCmd = 0, overflow = 0, neg =0;
         ProgramCounter = 0xFFFC;
         StackPointer = 0x0100;
 
-        mem.initializeMem(); 
+        mem.initializeMem();
+    }
+    /**/
+    Byte fetch(Memory &mem, unsigned int &Cycles){
+        Byte data = mem.data[0]; 
 
-        
+    }
+
+    /*This is where the operation is performed, every part of the cpu that is needed activated
+    to carry out the instructions*/
+    void execute(Memory &mem, unsigned int Cycles){
+
+        while (Cycles != 0){
+
+        } 
+    }
+
+    /* where the instructions are converted to understand which other parts of the CPU are
+    needed to continue the operation . Performed by the Instruction decoder*/
+    void decode(){
+
+    }
+    void writeBack(){
 
     }
     
