@@ -9,6 +9,12 @@ struct Memory{
 
     std::array<Byte,maxMemorySize> data; 
 
+    void initializeMem(){
+        for(std::size_t i = 0; i < maxMemorySize; i++){
+            data[i] = 0; 
+        }
+    }
+
 
 };
 
@@ -32,10 +38,21 @@ struct CPU{
     Byte zero : 1;
     Byte interrDisable : 1; 
     Byte decMode : 1; 
-    Byte breakCmd : 1; 
+    Byte brCmd : 1; 
     Byte overflow : 1; 
     Byte neg: 1; 
     
+
+    void reset(Memory &mem){
+        carry = 0, zero = 0, interrDisable = 0, decMode = 0, brCmd = 0, overflow = 0, neg =0;
+        ProgramCounter = 0xFFFC;
+        StackPointer = 0x0100;
+
+        mem.initializeMem(); 
+
+        
+
+    }
     
 
 };  
