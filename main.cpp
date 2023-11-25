@@ -1,5 +1,5 @@
 #include <iostream>
-#include <array> 
+#include <array>
  
 //Definitions for 8 bit type and 16 bit type 
 typedef uint8_t Byte; 
@@ -55,14 +55,19 @@ struct CPU{
     Byte fetch(Memory &mem, unsigned int &Cycles){
         Byte data = mem.data[ProgramCounter]; 
         ProgramCounter++;
+        Cycles--; 
 
+        return data; 
     }
 
     /*This is where the operation is performed, every part of the cpu that is needed activated
     to carry out the instructions*/
-    void execute(Memory &mem, unsigned int Cycles){
+    
+    
+    void execute(Memory &mem, unsigned int cycles){
 
-        while (Cycles != 0){
+        while (cycles != 0){
+            Byte instructions = fetch(mem, cycles);
 
         } 
     }
