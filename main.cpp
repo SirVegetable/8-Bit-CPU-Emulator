@@ -15,8 +15,11 @@ struct Memory{
             data[i] = 0; 
         }
     }
-
-
+    //Read one byte of memory, may get rid of later for a read and write function
+    Byte operator [](unsigned int Address) const{
+        //must assert the address is less than maxMemorySize
+        return data[Address];
+    }
 };
 
 
@@ -86,8 +89,10 @@ struct CPU{
 
 int main(){
     Memory mem; 
-    CPU cpu; 
-
+    CPU cpu;
+    cpu.Reset(mem);
+    cpu.execute(mem,4);
+    
 
     return 0; 
 }
