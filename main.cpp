@@ -63,7 +63,7 @@ struct CPU{
         return data; 
     }
     //opcodes
-    static constexpr Byte LDA_IM_INS = 0xA89; 
+    static constexpr Byte LDA_IM_INS = 0xA89, LDA_ZP_INS = 0xA5; 
 
     /*This is where the operation is performed, every part of the cpu that is needed activated
     to carry out the instructions*/
@@ -79,10 +79,13 @@ struct CPU{
                 Byte Value = fetch(mem,cycles);
                 Accum = Value; 
                 zero = (Accum == 0);
+                neg = (Accum & 0b10000000) > 0; 
             }
                 break;
             
-            default:
+            default:{
+                std::cout << "the instructions could not be handled\n";
+            }
                 break;
             }
         } 
