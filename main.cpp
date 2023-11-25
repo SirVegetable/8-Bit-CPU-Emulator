@@ -43,7 +43,7 @@ struct CPU{
     Byte overflow : 1; 
     Byte neg: 1; 
     
-
+    /* Emulates the computer turning off and the CPU having to reset*/
     void Reset(Memory &mem){
         carry = 0, zero = 0, interrDisable = 0, decMode = 0, brCmd = 0, overflow = 0, neg =0;
         ProgramCounter = 0xFFFC;
@@ -51,9 +51,10 @@ struct CPU{
 
         mem.initializeMem();
     }
-    /**/
+    /* The operation which recieves the instructions from Memory*/
     Byte fetch(Memory &mem, unsigned int &Cycles){
-        Byte data = mem.data[0]; 
+        Byte data = mem.data[ProgramCounter]; 
+        ProgramCounter++;
 
     }
 
@@ -79,6 +80,8 @@ struct CPU{
 };  
 
 int main(){
+    Memory mem; 
+    CPU cpu; 
 
 
     return 0; 
