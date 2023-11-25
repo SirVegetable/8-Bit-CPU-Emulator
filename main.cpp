@@ -62,6 +62,8 @@ struct CPU{
 
         return data; 
     }
+    //opcodes
+    static constexpr Byte LDA_IM_INS = 0xA89; 
 
     /*This is where the operation is performed, every part of the cpu that is needed activated
     to carry out the instructions*/
@@ -71,7 +73,18 @@ struct CPU{
 
         while (cycles != 0){
             Byte instructions = fetch(mem, cycles);
-
+            switch (instructions)
+            {
+            case LDA_IM_INS:{
+                Byte Value = fetch(mem,cycles);
+                Accum = Value; 
+                zero = (Accum == 0);
+            }
+                break;
+            
+            default:
+                break;
+            }
         } 
     }
 
@@ -92,7 +105,7 @@ int main(){
     CPU cpu;
     cpu.Reset(mem);
     cpu.execute(mem,4);
-    
+
 
     return 0; 
 }
