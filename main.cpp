@@ -15,11 +15,18 @@ struct Memory{
             data[i] = 0; 
         }
     }
-    // //Read one byte of memory, may get rid of later for a read and write function
+    //Read one byte of memory, may get rid of later for a read and write function
     // Byte operator [](unsigned int Address) const{
     //     //must assert the address is less than maxMemorySize
     //     return data[Address];
     // }
+        // writing two bytes of data
+    Rock writeRock(Rock value, unsigned int address, unsigned int& Cycles){
+
+        data[address] = value & 0xFF;
+        data[address + 1 ] = (value >> 8);
+        Cycles -=2; 
+    }
 };
 
 
@@ -83,13 +90,7 @@ struct CPU{
         Cycles--; 
         return Data; 
     }
-    // writing two bytes of data
-    Rock writeRock(Memory mem, Rock value, unsigned int address, unsigned int& Cycles){
 
-        mem.data[address] = value & 0xFF;
-        mem.data[address + 1 ] = (value >> 8);
-        Cycles -=2; 
-    }
     void LDA_FLAG_SETTR(){
         zero = (Accum == 0);
         //binary literal used to check if accum's 7th bit is set
@@ -138,7 +139,8 @@ struct CPU{
             
             case JSR_INS:{
                 Rock subbroutaddr = fetchRock(mem,Cycles);
-                mem.data[StackPointer] = ProgramCounter--;
+                mem.writeRock(ProgramCounter -1, StackPointer+1, Cycles);
+                ProgramCounter = subbroutaddr; 
                 Cycles--;
             }
             
@@ -168,7 +170,7 @@ int main(){
     cpu.Reset(mem);
     cpu.execute(mem,4);
     mem.data[0xFFFC] = CPU::LDA_IM_INS; 
-    mem.data[0xFFFD] = 0x42; 
+    mem.data[0xFFFD] = 0x85; 
 
 
     return 0; 
