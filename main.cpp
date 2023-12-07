@@ -28,7 +28,7 @@ struct CPU{
     
 
     Rock ProgramCounter;
-    Rock StackPointer;
+    Byte StackPointer;
 
     //Registers
     Byte Accum;
@@ -64,7 +64,7 @@ struct CPU{
     }
 
     Rock fetchRock(Memory &mem, unsigned int &Cycles){
-        // this is little endian 
+        // this is little endian need low and high bytes
         Byte lowbyte = mem.data[ProgramCounter]; 
         ProgramCounter++; 
         Cycles--; 
@@ -72,6 +72,8 @@ struct CPU{
         Byte highbyte = mem.data[ProgramCounter];
 
         Rock data = static_cast<Rock> (lowbyte) | static_cast<Rock> (highbyte); 
+        ProgramCounter++;
+        Cycles--;
 
         return data; 
     }
@@ -80,6 +82,13 @@ struct CPU{
         Byte Data = mem.data[ProgramCounter];
         Cycles--; 
         return Data; 
+    }
+    // writing two bytes of data
+    Rock writeRock(Memory mem, Rock value, unsigned int address, unsigned int& Cycles){
+
+        mem.data[address] = value & 0xFF;
+        mem.data[address + 1 ] = (value >> 8);
+        Cycles -=2; 
     }
     void LDA_FLAG_SETTR(){
         zero = (Accum == 0);
@@ -91,7 +100,8 @@ struct CPU{
     static constexpr Byte 
         LDA_IM_INS = 0xA89, 
         LDA_ZP_INS = 0xA5,
-        LDA_ZPX_INS = 0xB5; 
+        LDA_ZPX_INS = 0xB5,
+        JSR_INS = 0x20; 
 
     /*This is where the operation is performed, every part of the cpu that is needed activated
     to carry out the instructions*/
@@ -124,7 +134,13 @@ struct CPU{
                 Accum = readByte(mem,ZPaddress,Cycles);
                 LDA_FLAG_SETTR(); 
 
-            }break; 
+            }break;
+            
+            case JSR_INS:{
+                Rock subbroutaddr = fetchRock(mem,Cycles);
+                mem.data[StackPointer] = ProgramCounter--;
+                Cycles--;
+            }
             
             default:{
                 std::cout << "the instructions could not be handled\n";
