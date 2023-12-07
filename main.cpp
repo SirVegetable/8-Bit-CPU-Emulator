@@ -63,7 +63,7 @@ struct CPU{
         return data; 
     }
     //function to read a byte through a CPU cycle but doesn't increment PC like fetch
-    Byte ReadByte(Memory &mem,unsigned int& Cycles){
+    Byte readByte(Memory &mem,Byte Address,unsigned int& Cycles){
         Byte Data = mem.data[ProgramCounter];
         Cycles--; 
         return Data; 
@@ -75,7 +75,10 @@ struct CPU{
 
     }
     //opcodes
-    static constexpr Byte LDA_IM_INS = 0xA89, LDA_ZP_INS = 0xA5; 
+    static constexpr Byte 
+        LDA_IM_INS = 0xA89, 
+        LDA_ZP_INS = 0xA5,
+        LDA_ZPX_INS = 0xB5; 
 
     /*This is where the operation is performed, every part of the cpu that is needed activated
     to carry out the instructions*/
@@ -97,9 +100,18 @@ struct CPU{
 
             case LDA_ZP_INS:{
                 Byte ZPaddress = fetch(mem,Cycles);
+                Accum = readByte(mem,ZPaddress, Cycles);
+                LDA_FLAG_SETTR();
+            }break;
 
+            case LDA_ZPX_INS:{
+                Byte ZPaddress = fetch(mem,Cycles);
+                ZPaddress += X;
+                Cycles--;
+                Accum = readByte(mem,ZPaddress,Cycles);
+                LDA_FLAG_SETTR(); 
 
-            }
+            }break; 
             
             default:{
                 std::cout << "the instructions could not be handled\n";
