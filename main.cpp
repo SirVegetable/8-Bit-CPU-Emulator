@@ -55,10 +55,23 @@ struct CPU{
         mem.initializeMem();
     }
     /* The operation which recieves the instructions from Memory*/
-    Byte fetch(Memory &mem, unsigned int &Cycles){
+    Byte fetchbyte(Memory &mem, unsigned int &Cycles){
         Byte data = mem.data[ProgramCounter]; 
         ProgramCounter++;
         Cycles--; 
+
+        return data; 
+    }
+
+    Rock fetchRock(Memory &mem, unsigned int &Cycles){
+        // this is little endian 
+        Byte lowbyte = mem.data[ProgramCounter]; 
+        ProgramCounter++; 
+        Cycles--; 
+        //bits after ProgramCounter is incremented
+        Byte highbyte = mem.data[ProgramCounter];
+
+        Rock data = static_cast<Rock> (lowbyte) | static_cast<Rock> (highbyte); 
 
         return data; 
     }
@@ -87,25 +100,25 @@ struct CPU{
     void execute(Memory &mem, unsigned int Cycles){
 
         while (Cycles != 0){
-            Byte instructions = fetch(mem, Cycles);
+            Byte instructions = fetchbyte(mem, Cycles);
             switch (instructions)
             {
             case LDA_IM_INS:{
 
-                Byte secondByte = fetch(mem,Cycles);
+                Byte secondByte = fetchbyte(mem,Cycles);
                 Accum = secondByte;
                 LDA_FLAG_SETTR();
 
             }break;
 
             case LDA_ZP_INS:{
-                Byte ZPaddress = fetch(mem,Cycles);
+                Byte ZPaddress = fetchbyte(mem,Cycles);
                 Accum = readByte(mem,ZPaddress, Cycles);
                 LDA_FLAG_SETTR();
             }break;
 
             case LDA_ZPX_INS:{
-                Byte ZPaddress = fetch(mem,Cycles);
+                Byte ZPaddress = fetchbyte(mem,Cycles);
                 ZPaddress += X;
                 Cycles--;
                 Accum = readByte(mem,ZPaddress,Cycles);
