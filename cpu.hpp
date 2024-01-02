@@ -1,3 +1,5 @@
+#ifndef CPU_HPP
+#define CPU_HPP
 #include <iostream> 
 #include <array> 
 #include "typedefs.h"
@@ -6,6 +8,7 @@
 class CPU
 {
 public:
+    // the flags that make up the 8 bits
     enum FLAGS{
         C, // Carry
         Z, // Zero
@@ -31,4 +34,17 @@ public:
     void NonMaskableInterrupt();
     void InterruptRequest(); 
 
-}
+    //setter and getter
+    void setFlags(); 
+    void getFlags();
+
+    //fetch function
+    Byte Fetch(); 
+
+
+
+private:
+    Memory mem; 
+}; 
+
+#endif 
