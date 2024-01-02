@@ -10,7 +10,7 @@ class Bus
         ~Bus();
 
     //Member functions
-    void write();
+    void write(Rock addr, Byte dataToMem);
     Byte read(); 
     //Members     
     public:
