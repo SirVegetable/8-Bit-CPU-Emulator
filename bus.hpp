@@ -11,7 +11,7 @@ class Bus
 
     //Member functions
     void write(Rock addr, Byte dataToMem);
-    Byte read(); 
+    Byte read(Rock addr); 
     //Members     
     public:
         Memory Mem;
