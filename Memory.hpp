@@ -16,7 +16,7 @@ public:
 
     //Read and Write functions
     Byte read(Rock addr);
-    void write();
+    void write(Rock addr, Byte dataToMem);
 
     //member values 
     static constexpr std::size_t MaxMemSize = 64 * 1024;

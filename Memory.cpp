@@ -26,5 +26,12 @@ Byte Memory::read(Rock addr){
         }
 }
 
+void Memory::write(Rock addr, Byte dataToMem){
+        if(addr >= 0x0000 && addr <= 0xFFFF ){
+                data[addr] = dataToMem; 
+        }
+        
+}
+
 
 
