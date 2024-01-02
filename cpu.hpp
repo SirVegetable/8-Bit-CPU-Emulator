@@ -3,6 +3,7 @@
 #include <iostream> 
 #include <array> 
 #include "typedefs.h"
+#include "Memory.hpp"
 
 
 class CPU
@@ -24,7 +25,9 @@ public:
     //Stack Pointer
     Byte StackPointer= 0x00; 
     //Program Counter
-    Rock ProgramCounter= 0x0000; 
+    Rock ProgramCounter= 0x0000;
+    //Status Register for the flags
+    Byte StatusRegister = 0x00; 
 
     //function to measure clock cycles of the cpu
     void Clock();
