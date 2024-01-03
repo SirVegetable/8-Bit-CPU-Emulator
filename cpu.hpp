@@ -9,17 +9,18 @@
 class CPU
 {
 public:
-    // the flags that make up the 8 bits
+    // the flags that make up the 8 bits, shift the 1 to the left 
     enum FLAGS{
-        C, // Carry
-        Z, // Zero
-        ID, // Interrupt Disable
-        D, //Decimal Mode
-        B, //Break
-        U, //Unused
-        OV, //Overflow
-        N // Negative
+        C = 1 << 0,  // Carry
+        Z = 1 << 1,  // Zero
+        ID = 1 << 2, // Interrupt Disable
+        D = 1 << 3,  //Decimal Mode
+        B = 1 << 4,  //Break
+        U = 1 << 5,  //Unused
+        OV = 1 << 6, //Overflow
+        N = 1 << 7   // Negative
     };
+    
     //Acumulator, X and Y Registers
     Byte Accum,X,Y = 0x00;
     //Stack Pointer
