@@ -20,7 +20,8 @@ public:
         OV = 1 << 6, //Overflow
         N = 1 << 7   // Negative
     };
-    
+
+
     //Acumulator, X and Y Registers
     Byte Accum,X,Y = 0x00;
     //Stack Pointer
@@ -48,7 +49,13 @@ public:
 
 
 private:
-    Memory mem; 
+    // Variables to hold information
+    Byte fetchedData;
+    Byte Cycles; 
+
+private: 
+    //Adressing modes, the 6502 has many different ways in which memory is addressed
+    Byte IMP_Addr(); Byte IMM_Addr(); 
 }; 
 
 #endif 
