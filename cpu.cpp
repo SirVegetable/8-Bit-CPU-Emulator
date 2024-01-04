@@ -12,12 +12,16 @@ CPU::~CPU()
 
 }
 
-void Reset(){
+void CPU::Reset(){
     
 }
-Byte Fetch(){
+Byte CPU::Fetch(){
 
 }
-//Addressing Mode Functions 
-Byte IMP_Addr(){}
-Byte IMM_Addr(){}
+//ADDRESSING MODES 
+
+//Implied function: Does not require any additional data for ins
+Byte CPU::IMP_Addr(){
+    
+}
+Byte CPU::IMM_Addr(){}
