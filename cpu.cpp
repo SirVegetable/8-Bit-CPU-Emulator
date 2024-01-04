@@ -18,10 +18,12 @@ void CPU::Reset(){
 Byte CPU::Fetch(){
 
 }
+
 //ADDRESSING MODES 
 
 //Implied function: Does not require any additional data for ins
 Byte CPU::IMP_Addr(){
     
 }
+// Immediate addressing mode: 
 Byte CPU::IMM_Addr(){}

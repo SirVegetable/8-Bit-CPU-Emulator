@@ -51,7 +51,10 @@ public:
 private:
     // Variables to hold information
     Byte fetchedData;
-    Byte Cycles; 
+    Byte Cycles;
+    Rock addr_abs = 0x0000;
+    Byte current_opcode; 
+
 
 private: 
     //Adressing modes, the 6502 has many different ways in which memory is addressed
