@@ -58,7 +58,14 @@ private:
 
 private: 
     //Adressing modes, the 6502 has many different ways in which memory is addressed
-    Byte IMP_Addr(); Byte IMM_Addr(); 
+    Byte IMP_Addr(); Byte IMM_Addr(); Byte ZP_Addr(); 
+    Byte ZPX_Addr(); Byte ZPY_Addr(); Byte REL_Addr();
+    Byte ABS_Addr(); Byte ABSX_Addr(); Byte ABS_Addr(); 
+    Byte IND_Addr(); Byte IZPX_Addr(); Byte IZPY_AddrI();
+
+private: 
+    // Opcodes
+    
 }; 
 
 #endif 
