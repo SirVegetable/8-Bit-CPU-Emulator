@@ -64,8 +64,12 @@ private:
     Byte IND_Addr(); Byte IZPX_Addr(); Byte IZPY_AddrI();
 
 private: 
-    // Opcodes
-    
+    // Opcodes - 56 total instructions 
+    Byte ADC(); Byte AND(); Byte ASL(); Byte BCC();
+    Byte BCS(); Byte BEQ(); Byte BIT(); Byte BMI(); 
+    Byte BNE(); Byte BPL(); Byte BRK(); Byte BVC(); 
+    Byte CLC(); Byte CLD(); Byte CLV(); Byte CMP(); 
+
 }; 
 
 #endif 
