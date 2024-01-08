@@ -27,3 +27,19 @@ Byte CPU::IMP_Addr(){
 }
 // Immediate addressing mode: 
 Byte CPU::IMM_Addr(){}
+
+
+// INSTRUCTION SET
+
+// Add With Carry
+Byte CPU::ADC(){}
+
+// And (with the Accumulator)
+Byte CPU::AND(){}
+
+// Arithmethic Shift Left
+Byte CPU::ASL(){}
+
+// Branch on Clear Carry
+Byte CPU::BCC(){}
+
