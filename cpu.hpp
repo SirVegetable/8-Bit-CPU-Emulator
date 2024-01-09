@@ -40,16 +40,21 @@ public:
     void InterruptRequest(); 
 
     //setter and getter
-    void setFlags(); 
-    void getFlags();
+
+    //the set flag will take the specified flag and a boolean value to determine if the flags should be set to 0 or 1
+    void setFlags(FLAGS f, bool toSet);
+
+    //the getFlags function will take in the specified flag and return the flag value
+    FLAGS getFlags(FLAGS f);
 
     //fetch function
     Byte Fetch();
 
 
-    /* The instruction set for our lookup table will be two function pointers: The first one is the opcode function to be executed
-       and the second function pointer will be to the address mode that is used for the instruction. Lastly this struct will hold
-       the number of cycles that is needed to execute the instructions
+    /* 
+        The instruction set for our lookup table will be two function pointers: The first one is the opcode function to be executed
+        and the second function pointer will be to the address mode that is used for the instruction. Lastly this struct will hold
+        the number of cycles that is needed to execute the instructions
     */
     struct Instruction_Set{
         Byte (CPU::*op_code)(void) = nullptr; 

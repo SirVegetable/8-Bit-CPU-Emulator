@@ -24,10 +24,10 @@ void CPU::NonMaskableInterrupt(){
 void CPU::InterruptRequest(){
 
 }
-void CPU::setFlags(){
+void CPU::setFlags(CPU::FLAGS f, bool toSet){
 
 }
-CPU::FLAGS CPU::getFlags(){
+CPU::FLAGS CPU::getFlags(CPU::FLAGS f){
 
 }
 
