@@ -44,7 +44,17 @@ public:
     void getFlags();
 
     //fetch function
-    Byte Fetch(); 
+    Byte Fetch();
+    /* The instruction set for our lookup table will be two function pointers: The first one is the opcode function to be executed
+       and the second function pointer will be to the address mode that is used for the instruction. Lastly this struct will hold
+       the number of cycles that is needed to execute the instructions
+    */
+    struct Instruction_Set{
+        Byte (CPU::*op_code)(void) = nullptr; 
+        Byte (CPU::*addr_mode)(void) = nullptr; 
+        Byte Cycles = 0x00; 
+
+    };
 
 
 
@@ -69,6 +79,11 @@ private:
     Byte BCS(); Byte BEQ(); Byte BIT(); Byte BMI(); 
     Byte BNE(); Byte BPL(); Byte BRK(); Byte BVC(); 
     Byte CLC(); Byte CLD(); Byte CLV(); Byte CMP();
+    Byte CPX(); Byte CPY(); Byte DEC(); Byte DEX(); 
+    Byte DEY(); Byte EOR(); Byte INC(); Byte INX(); 
+    Byte INY(); Byte JMP(); Byte JSR(); Byte LDA();
+    Byte LDX(); Byte LDY(); Byte LSR(); Byte NOP(); 
+    Byte ORA(); Byte PHA(); 
 
 }; 
 
