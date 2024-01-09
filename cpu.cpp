@@ -12,9 +12,7 @@ CPU::~CPU()
 
 }
 
-void CPU::Clock(){
 
-}
 void CPU::Reset(){
     
 }

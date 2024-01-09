@@ -4,6 +4,7 @@
 #include <array> 
 #include "typedefs.h"
 #include "Memory.hpp"
+#include "bus.hpp"
 
 
 class CPU
@@ -20,7 +21,7 @@ public:
         OV = 1 << 6, //Overflow
         N = 1 << 7   // Negative
     };
-
+    Bus bus; 
 
     //Acumulator, X and Y Registers
     Byte Accum,X,Y = 0x00;
@@ -31,8 +32,7 @@ public:
     //Status Register for the flags
     Byte StatusRegister = 0x00; 
 
-    //function to measure clock cycles of the cpu
-    void Clock();
+    
     
     //functions that handle 6502 interrupts
     void Reset();
@@ -41,7 +41,10 @@ public:
 
     //setter and getter
 
-    //the set flag will take the specified flag and a boolean value to determine if the flags should be set to 0 or 1
+    /*
+        the set flag will take the specified flag and a boolean value to determine if the flags should is enabled or not 
+        and then set the corresponding flag value in the Status Register
+    */
     void setFlags(FLAGS f, bool toSet);
 
     //the getFlags function will take in the specified flag and return the flag value
@@ -70,9 +73,9 @@ public:
 
 private:
     // Variables to hold information
-    Byte fetchedData = 0x00;
     Byte Cycles = 0x00;
     Rock addr_abs = 0x0000;
+    Byte ticks = 0x00; 
     Byte current_opcode = 0x00; 
 
 
