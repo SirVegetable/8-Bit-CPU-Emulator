@@ -12,9 +12,26 @@ CPU::~CPU()
 
 }
 
+void CPU::Clock(){
+
+}
 void CPU::Reset(){
     
 }
+void CPU::NonMaskableInterrupt(){
+
+}
+void CPU::InterruptRequest(){
+
+}
+void CPU::setFlags(){
+
+}
+CPU::FLAGS CPU::getFlags(){
+
+}
+
+
 Byte CPU::Fetch(){
 
 }

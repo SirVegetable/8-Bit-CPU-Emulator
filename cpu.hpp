@@ -45,6 +45,8 @@ public:
 
     //fetch function
     Byte Fetch();
+
+
     /* The instruction set for our lookup table will be two function pointers: The first one is the opcode function to be executed
        and the second function pointer will be to the address mode that is used for the instruction. Lastly this struct will hold
        the number of cycles that is needed to execute the instructions
@@ -55,23 +57,26 @@ public:
         Byte Cycles = 0x00; 
 
     };
+    // Lookup Table: 256 total instructions
+    Instruction_Set lookup[256];
+    
 
 
 
 private:
     // Variables to hold information
-    Byte fetchedData;
-    Byte Cycles;
+    Byte fetchedData = 0x00;
+    Byte Cycles = 0x00;
     Rock addr_abs = 0x0000;
-    Byte current_opcode; 
+    Byte current_opcode = 0x00; 
 
 
 private: 
     //Adressing modes, the 6502 has many different ways in which memory is addressed
     Byte IMP_Addr(); Byte IMM_Addr(); Byte ZP_Addr(); 
     Byte ZPX_Addr(); Byte ZPY_Addr(); Byte REL_Addr();
-    Byte ABS_Addr(); Byte ABSX_Addr(); Byte ABS_Addr(); 
-    Byte IND_Addr(); Byte IZPX_Addr(); Byte IZPY_AddrI();
+    Byte ABS_Addr(); Byte ABSX_Addr(); Byte ABY_Addr(); 
+    Byte IND_Addr(); Byte IZPX_Addr(); Byte IZPY_Addr();
 
 private: 
     // Opcodes - 56 total instructions 
