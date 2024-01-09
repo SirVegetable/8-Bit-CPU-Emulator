@@ -25,6 +25,12 @@ void CPU::InterruptRequest(){
 
 }
 void CPU::setFlags(CPU::FLAGS f, bool toSet){
+    if(toSet){
+        StatusRegister |= f;
+    }
+    else{
+        StatusRegister &= ~f; 
+    }
 
 }
 CPU::FLAGS CPU::getFlags(CPU::FLAGS f){
