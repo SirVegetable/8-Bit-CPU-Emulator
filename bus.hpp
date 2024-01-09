@@ -11,11 +11,11 @@ class Bus
 
     //Member functions
     void write(Rock addr, Byte dataToMem);
-    Byte read(Rock addr); 
+    Byte read(Rock addr);
+
     //Members     
     public:
         Memory Mem;
-        CPU cpu; 
 
 };
 #endif 
