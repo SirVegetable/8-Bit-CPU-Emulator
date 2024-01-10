@@ -13,13 +13,13 @@ Memory::~Memory()
 
 void Memory::initializeMem(){
     for(size_t i = 0; i < MaxMemSize; i++){
-        data[i] = 0; 
+        ram[i] = 0; 
     }
 
 }
 Byte Memory::read(Rock addr){
         if(addr >= 0x0000 && addr <= 0xFFFF ){
-                return data[addr];
+                return ram[addr];
         }
         else{
                 return 0x00; 
@@ -28,7 +28,7 @@ Byte Memory::read(Rock addr){
 
 void Memory::write(Rock addr, Byte dataToMem){
         if(addr >= 0x0000 && addr <= 0xFFFF ){
-                data[addr] = dataToMem; 
+                ram[addr] = dataToMem; 
         }
         
 }

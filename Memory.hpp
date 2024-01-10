@@ -20,7 +20,7 @@ public:
 
     //member values 
     static constexpr std::size_t MaxMemSize = 64 * 1024;
-    std::array<Byte,MaxMemSize> data; 
+    std::array<Byte,MaxMemSize> ram; 
 };
 
 #endif
