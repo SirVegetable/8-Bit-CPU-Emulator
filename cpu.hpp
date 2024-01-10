@@ -86,27 +86,23 @@ private:
 
 private: 
     //Adressing modes, the 6502 has many different ways in which memory is addressed
-    Byte IMP_Addr(); Byte IMM_Addr(); Byte ZP_Addr(); 
-    Byte ZPX_Addr(); Byte ZPY_Addr(); Byte REL_Addr();
-    Byte ABS_Addr(); Byte ABSX_Addr(); Byte ABY_Addr(); 
-    Byte IND_Addr(); Byte IZPX_Addr(); Byte IZPY_Addr();
+    Byte IMP_Addr(); Byte IMM_Addr();   Byte ZP_Addr(); 
+    Byte ZPX_Addr(); Byte ZPY_Addr();   Byte REL_Addr();
+    Byte ABS_Addr(); Byte ABSX_Addr();  Byte ABSY_Addr(); 
+    Byte IND_Addr(); Byte IZPX_Addr();  Byte IZPY_Addr();
+
+    // Illegal addressing mode
+    Byte Illegal_addr(); 
 
 private: 
     // Opcodes - 56 total instructions 
-    Byte ADC(); Byte AND(); Byte ASL(); Byte BCC();
-    Byte BCS(); Byte BEQ(); Byte BIT(); Byte BMI(); 
-    Byte BNE(); Byte BPL(); Byte BRK(); Byte BVC(); 
-    Byte CLC(); Byte CLD(); Byte CLV(); Byte CMP();
-    Byte CPX(); Byte CPY(); Byte DEC(); Byte DEX(); 
-    Byte DEY(); Byte EOR(); Byte INC(); Byte INX(); 
-    Byte INY(); Byte JMP(); Byte JSR(); Byte LDA();
-    Byte LDX(); Byte LDY(); Byte LSR(); Byte NOP(); 
-    Byte ORA(); Byte PHA(); Byte PHP(); Byte PLA();
-    Byte PLP(); Byte ROL(); Byte ROR(); Byte RTI();
-    Byte RTS(); Byte SBC(); Byte SEC(); Byte SED(); 
-    Byte SEI(); Byte STA(); Byte STX(); Byte STY();
-    Byte TAX(); Byte TAY(); Byte TSX(); Byte TXA();
-    Byte TXA(); Byte TXS(); Byte TYA(); 
+    Byte ADC(); Byte AND(); Byte ASL(); Byte BCC(); Byte BCS(); Byte BEQ(); Byte BIT(); Byte BMI(); 
+    Byte BNE(); Byte BPL(); Byte BRK(); Byte BVC(); Byte BVS(); Byte CLC(); Byte CLD(); Byte CLV(); 
+    Byte CMP(); Byte CPX(); Byte CPY(); Byte DEC(); Byte DEX(); Byte DEY(); Byte EOR(); Byte INC(); 
+    Byte INX(); Byte INY(); Byte JMP(); Byte JSR(); Byte LDA(); Byte LDX(); Byte LDY(); Byte LSR(); 
+    Byte NOP(); Byte ORA(); Byte PHA(); Byte PHP(); Byte PLA(); Byte PLP(); Byte ROL(); Byte ROR(); 
+    Byte RTI(); Byte RTS(); Byte SBC(); Byte SEC(); Byte SED(); Byte SEI(); Byte STA(); Byte STX(); 
+    Byte STY(); Byte TAX(); Byte TAY(); Byte TSX(); Byte TXA(); Byte TXA(); Byte TXS(); Byte TYA(); 
 
 
 }; 
