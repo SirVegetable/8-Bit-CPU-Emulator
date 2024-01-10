@@ -4,10 +4,10 @@
 //Constructor
 CPU::CPU()
 {
-    lookup =
-    {
-            {CPU::BRK,CPU::IMP_Addr,7},
-    };
+    // lookup =
+    // {
+    //         {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6},{&CPU:: , &CPU::, }
+    // };
 
 }
 //Destructor 
@@ -18,6 +18,7 @@ CPU::~CPU()
 
 
 void CPU::Reset(){
+
     
 }
 void CPU::NonMaskableInterrupt(){
@@ -47,9 +48,10 @@ Byte CPU::Fetch(){
 }
 void CPU::Execute(){
     // if cycles is 0 then the next instruction can be executed 
-    if(Cycles == 0){
+    if(cycles == 0){
         //fetch the opcode
         Byte opcode = Fetch();
+        
 
 
     }
@@ -57,8 +59,12 @@ void CPU::Execute(){
 
 // --------ADDRESSING MODES----------
 
-// Implied Addressing Mode: Does not require any additional data for ins
+/*
+    Implied Addressing Mode: These instruction act directly on one or more registers or flags internal to the CPU, 
+    single-byte insturctions, no operand, excusively target the contents of the Accumulator. 
+*/
 Byte CPU::IMP_Addr(){
+
     
 }
 // Immediate addressing mode: 
@@ -73,6 +79,32 @@ Byte CPU::ZP_Addr(){
 Byte CPU::ZPX_Addr(){
     
 }
+// Zero Page + Y Register Adressing Mode: 
+Byte CPU::ZPY_Addr(){
+
+}
+Byte CPU::REL_Addr(){
+
+}
+Byte CPU::ABS_Addr(){
+
+}
+Byte CPU::ABSX_Addr(){
+
+}
+Byte CPU::ABSY_Addr(){
+
+}
+Byte CPU::IND_Addr(){
+
+}
+Byte CPU::IZPX_Addr(){
+
+}
+Byte CPU::IZPY_Addr(){
+
+}
+
 
 
 // INSTRUCTION SET

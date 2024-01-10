@@ -15,10 +15,10 @@ public:
         C = 1 << 0,  // Carry
         Z = 1 << 1,  // Zero
         ID = 1 << 2, // Interrupt Disable
-        D = 1 << 3,  //Decimal Mode
-        B = 1 << 4,  //Break
-        U = 1 << 5,  //Unused
-        OV = 1 << 6, //Overflow
+        D = 1 << 3,  // Decimal Mode
+        B = 1 << 4,  // Break
+        U = 1 << 5,  // Unused
+        OV = 1 << 6, // Overflow
         N = 1 << 7   // Negative
     };
     //Bus member value which connects the bus to the cpu and allows for read and write
@@ -67,8 +67,6 @@ public:
         Byte (CPU::*op_code)(void) = nullptr; 
         Byte (CPU::*addr_mode)(void) = nullptr; 
         Byte cycles = 0x00;
-        //certain instructions may 
-        Byte additional_cycles = 0x00; 
 
     };
     // Lookup Table: 
@@ -79,7 +77,7 @@ public:
 
 private:
     // Variables to hold timing information
-    Byte Cycles = 0x00;
+    Byte cycles = 0x00;
     Byte ticks = 0x00; 
 
 
@@ -91,8 +89,8 @@ private:
     Byte ABS_Addr(); Byte ABSX_Addr();  Byte ABSY_Addr(); 
     Byte IND_Addr(); Byte IZPX_Addr();  Byte IZPY_Addr();
 
-    // Illegal addressing mode
-    Byte Illegal_addr(); 
+
+    Byte Illegal_opcode(); 
 
 private: 
     // Opcodes - 56 total instructions 
@@ -103,7 +101,8 @@ private:
     Byte NOP(); Byte ORA(); Byte PHA(); Byte PHP(); Byte PLA(); Byte PLP(); Byte ROL(); Byte ROR(); 
     Byte RTI(); Byte RTS(); Byte SBC(); Byte SEC(); Byte SED(); Byte SEI(); Byte STA(); Byte STX(); 
     Byte STY(); Byte TAX(); Byte TAY(); Byte TSX(); Byte TXA(); Byte TXA(); Byte TXS(); Byte TYA(); 
-
+    
+    Byte Illegal_opcode(); 
 
 }; 
 
