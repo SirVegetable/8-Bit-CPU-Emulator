@@ -21,6 +21,7 @@ public:
         OV = 1 << 6, //Overflow
         N = 1 << 7   // Negative
     };
+    //Bus member value which connects the bus to the cpu and allows for read and write
     Bus bus; 
 
     //Acumulator, X and Y Registers
@@ -50,8 +51,11 @@ public:
     //the getFlags function will take in the specified flag and return the flag value
     FLAGS getFlags(FLAGS f);
 
-    //fetch function
+    // Fetch is used for instructions 
     Byte Fetch();
+
+    //function that executes the instructions
+    void Execute();
 
 
     /* 
@@ -62,21 +66,22 @@ public:
     struct Instruction_Set{
         Byte (CPU::*op_code)(void) = nullptr; 
         Byte (CPU::*addr_mode)(void) = nullptr; 
-        Byte Cycles = 0x00; 
+        Byte cycles = 0x00;
+        //certain instructions may 
+        Byte additional_cycles = 0x00; 
 
     };
-    // Lookup Table: 256 total instructions
-    Instruction_Set lookup[256];
+    // Lookup Table: 
+    std::vector<Instruction_Set> lookup; 
     
 
 
 
 private:
-    // Variables to hold information
+    // Variables to hold timing information
     Byte Cycles = 0x00;
-    Rock addr_abs = 0x0000;
     Byte ticks = 0x00; 
-    Byte current_opcode = 0x00; 
+
 
 
 private: 
@@ -96,7 +101,13 @@ private:
     Byte DEY(); Byte EOR(); Byte INC(); Byte INX(); 
     Byte INY(); Byte JMP(); Byte JSR(); Byte LDA();
     Byte LDX(); Byte LDY(); Byte LSR(); Byte NOP(); 
-    Byte ORA(); Byte PHA(); 
+    Byte ORA(); Byte PHA(); Byte PHP(); Byte PLA();
+    Byte PLP(); Byte ROL(); Byte ROR(); Byte RTI();
+    Byte RTS(); Byte SBC(); Byte SEC(); Byte SED(); 
+    Byte SEI(); Byte STA(); Byte STX(); Byte STY();
+    Byte TAX(); Byte TAY(); Byte TSX(); Byte TXA();
+    Byte TXA(); Byte TXS(); Byte TYA(); 
+
 
 }; 
 

@@ -4,7 +4,11 @@
 //Constructor
 CPU::CPU()
 {
-    
+    lookup =
+    {
+            {CPU::BRK,CPU::IMP_Addr,7},
+    };
+
 }
 //Destructor 
 CPU::~CPU()
@@ -37,17 +41,38 @@ CPU::FLAGS CPU::getFlags(CPU::FLAGS f){
 
 
 Byte CPU::Fetch(){
+    Byte fetched_data = bus.read(ProgramCounter);
+    ProgramCounter++;
+    return fetched_data; 
+}
+void CPU::Execute(){
+    // if cycles is 0 then the next instruction can be executed 
+    if(Cycles == 0){
+        //fetch the opcode
+        Byte opcode = Fetch();
 
+
+    }
 }
 
-//ADDRESSING MODES 
+// --------ADDRESSING MODES----------
 
-//Implied function: Does not require any additional data for ins
+// Implied Addressing Mode: Does not require any additional data for ins
 Byte CPU::IMP_Addr(){
     
 }
 // Immediate addressing mode: 
 Byte CPU::IMM_Addr(){}
+
+// Zero Page Addressing Mode: 
+Byte CPU::ZP_Addr(){
+
+}
+
+// Zero Page + X Register Addressing Mode: 
+Byte CPU::ZPX_Addr(){
+    
+}
 
 
 // INSTRUCTION SET
