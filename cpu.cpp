@@ -123,17 +123,21 @@ Byte CPU::BCC(){}
 
 Byte CPU::BCS(){}
 
-Byte CPU::(){}
-Byte CPU::(){}
-Byte CPU::(){}
-Byte CPU::(){}
-Byte CPU::(){}
-Byte CPU::(){}
-Byte CPU::(){}
-Byte CPU::(){}
-Byte CPU::(){}
-Byte CPU::(){}
-Byte CPU::(){}
+Byte CPU::BEQ(){}
+Byte CPU::BIT(){}
+Byte CPU::BMI(){}
+Byte CPU::BNE(){}
+Byte CPU::BPL(){}
+Byte CPU::BRK(){}
+Byte CPU::BVC(){}
+Byte CPU::BVS(){}
+Byte CPU::CLC(){}
+Byte CPU::CLD(){}
+Byte CPU::CLI(){}
+Byte CPU::CLV(){}
+Byte CPU::CMP(){}
+Byte CPU::CPX(){}
+Byte CPU::CPY(){}
 Byte CPU::DEC(){}
 Byte CPU::DEX(){}
 Byte CPU::DEY(){}

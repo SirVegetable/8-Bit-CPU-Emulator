@@ -95,12 +95,12 @@ private:
 private: 
     // Opcodes - 56 total instructions 
     Byte ADC(); Byte AND(); Byte ASL(); Byte BCC(); Byte BCS(); Byte BEQ(); Byte BIT(); Byte BMI(); 
-    Byte BNE(); Byte BPL(); Byte BRK(); Byte BVC(); Byte BVS(); Byte CLC(); Byte CLD(); Byte CLV(); 
-    Byte CMP(); Byte CPX(); Byte CPY(); Byte DEC(); Byte DEX(); Byte DEY(); Byte EOR(); Byte INC(); 
-    Byte INX(); Byte INY(); Byte JMP(); Byte JSR(); Byte LDA(); Byte LDX(); Byte LDY(); Byte LSR(); 
-    Byte NOP(); Byte ORA(); Byte PHA(); Byte PHP(); Byte PLA(); Byte PLP(); Byte ROL(); Byte ROR(); 
-    Byte RTI(); Byte RTS(); Byte SBC(); Byte SEC(); Byte SED(); Byte SEI(); Byte STA(); Byte STX(); 
-    Byte STY(); Byte TAX(); Byte TAY(); Byte TSX(); Byte TXA(); Byte TXA(); Byte TXS(); Byte TYA(); 
+    Byte BNE(); Byte BPL(); Byte BRK(); Byte BVC(); Byte BVS(); Byte CLC(); Byte CLD(); Byte CLI(); 
+    Byte CLV(); Byte CMP(); Byte CPX(); Byte CPY(); Byte DEC(); Byte DEX(); Byte DEY(); Byte EOR(); 
+    Byte INC(); Byte INX(); Byte INY(); Byte JMP(); Byte JSR(); Byte LDA(); Byte LDX(); Byte LDY(); 
+    Byte LSR(); Byte NOP(); Byte ORA(); Byte PHA(); Byte PHP(); Byte PLA(); Byte PLP(); Byte ROL(); 
+    Byte ROR(); Byte RTI(); Byte RTS(); Byte SBC(); Byte SEC(); Byte SED(); Byte SEI(); Byte STA(); 
+    Byte STX(); Byte STY(); Byte TAX(); Byte TAY(); Byte TSX(); Byte TXA(); Byte TXS(); Byte TYA(); 
     
     Byte Illegal_opcode(); 
 
