@@ -121,3 +121,55 @@ Byte CPU::ASL(){}
 // Branch on Clear Carry
 Byte CPU::BCC(){}
 
+Byte CPU::BCS(){}
+
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::(){}
+Byte CPU::DEC(){}
+Byte CPU::DEX(){}
+Byte CPU::DEY(){}
+Byte CPU::EOR(){}
+Byte CPU::INC(){}
+Byte CPU::INX(){}
+Byte CPU::INY(){}
+Byte CPU::JMP(){}
+Byte CPU::JSR(){}
+Byte CPU::LDX(){}
+Byte CPU::LDY(){}
+Byte CPU::LSR(){}
+Byte CPU::NOP(){}
+Byte CPU::ORA(){}
+Byte CPU::PHA(){}
+Byte CPU::PHP(){}
+Byte CPU::PLA(){}
+Byte CPU::PLP(){}
+Byte CPU::ROL(){}
+Byte CPU::ROR(){}
+Byte CPU::RTI(){}
+Byte CPU::RTS(){}
+Byte CPU::SBC(){}
+Byte CPU::SEC(){}
+Byte CPU::SED(){}
+Byte CPU::SEI(){}
+Byte CPU::STA(){}
+Byte CPU::STX(){}
+Byte CPU::STY(){}
+Byte CPU::TAX(){}
+Byte CPU::TAY(){}
+Byte CPU::TXS(){}
+Byte CPU::TXA(){}
+Byte CPU::TXS(){}
+Byte CPU::TYA(){}
+
+Byte CPU::Illegal_opcode(){
+    return 0; 
+}
