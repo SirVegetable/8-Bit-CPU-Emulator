@@ -6,6 +6,8 @@
 #include "Memory.hpp"
 #include "bus.hpp"
 
+#define BIT_GRAB(SR,f)(((SR & f) > 0) ? 1 : 0);
+#define BIT_SET(SR,f,bl) if(bl){ (SR) |= (f); } else { (SR) &= (~f); };
 
 class CPU
 {
@@ -40,16 +42,6 @@ public:
     void NonMaskableInterrupt();
     void InterruptRequest(); 
 
-    //setter and getter
-
-    /*
-        the set flag will take the specified flag and a boolean value to determine if the flags should is enabled or not 
-        and then set the corresponding flag value in the Status Register
-    */
-    void setFlags(FLAGS f, bool toSet);
-
-    //the getFlags function will take in the specified flag and return the flag value
-    FLAGS getFlags(FLAGS f);
 
     // Fetch is used for instructions 
     Byte Fetch();
@@ -78,7 +70,9 @@ public:
 private:
     // Variables to hold timing information
     Byte cycles = 0x00;
-    Byte ticks = 0x00; 
+    Byte ticks = 0x00;
+    // Variable to hold fetched information
+    Byte fetchedData = 0x00;  
 
 
 
@@ -90,7 +84,6 @@ private:
     Byte IND_Addr(); Byte IZPX_Addr();  Byte IZPY_Addr();
 
 
-    Byte Illegal_opcode(); 
 
 private: 
     // Opcodes - 56 total instructions 

@@ -27,18 +27,7 @@ void CPU::NonMaskableInterrupt(){
 void CPU::InterruptRequest(){
 
 }
-void CPU::setFlags(CPU::FLAGS f, bool toSet){
-    if(toSet){
-        StatusRegister |= f;
-    }
-    else{
-        StatusRegister &= ~f; 
-    }
 
-}
-CPU::FLAGS CPU::getFlags(CPU::FLAGS f){
-
-}
 
 
 Byte CPU::Fetch(){
@@ -61,10 +50,10 @@ void CPU::Execute(){
 
 /*
     Implied Addressing Mode: These instruction act directly on one or more registers or flags internal to the CPU, 
-    single-byte insturctions, no operand, excusively target the contents of the Accumulator. 
+    single-byte instructions, no operand, excusively target the contents of the Accumulator. 
 */
 Byte CPU::IMP_Addr(){
-
+    
     
 }
 // Immediate addressing mode: 
