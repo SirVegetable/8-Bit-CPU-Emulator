@@ -72,7 +72,9 @@ private:
     Byte cycles = 0x00;
     Byte ticks = 0x00;
     // Variable to hold fetched information
-    Byte fetchedData = 0x00;  
+    Byte fetchedData = 0x00;
+    Rock current_address = 0x0000;
+     
 
 
 

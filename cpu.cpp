@@ -53,11 +53,14 @@ void CPU::Execute(){
     single-byte instructions, no operand, excusively target the contents of the Accumulator. 
 */
 Byte CPU::IMP_Addr(){
-    
+    fetchedData = Accum; 
     
 }
 // Immediate addressing mode: 
-Byte CPU::IMM_Addr(){}
+Byte CPU::IMM_Addr(){
+    
+    
+}
 
 // Zero Page Addressing Mode: 
 Byte CPU::ZP_Addr(){
