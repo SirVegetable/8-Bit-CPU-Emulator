@@ -185,13 +185,21 @@ void CPU::REL_Addr(){
 
 
 
-// INSTRUCTION SET
+// ---------INSTRUCTION SET-----------
 
 // Add With Carry
 void CPU::ADC(){}
 
-// And (with the Accumulator)
-void CPU::AND(){}
+/* 
+    AND instruction: This is the Bitwise logic AND, used on the Accumulator with the contents of a byte of memory and set 
+    Flags: Z, N
+*/ 
+void CPU::AND(){
+    fetchedData = Fetch();
+
+    Accum = Accum & fetchedData;
+    BIT_SET(StackPointer,Z,(Accum == 0x00))
+}
 
 // Arithmethic Shift Left
 void CPU::ASL(){}

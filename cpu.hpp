@@ -80,7 +80,7 @@ private:
     //The 6502 branching instructions have a specified range(explaination in the Relative Addressing mode)
     Rock relativeAddress = 0x0000; 
     // Variable to check if the instruction crosses a page boundary
-    Byte pageBoundary = 0x00;
+    Byte pBoundaryCrossed = 0x00;
 
 
      
