@@ -382,21 +382,30 @@ void CPU::CLC(){
     pBoundaryCrossed = 0; 
 }
 /*
-    Clear Deceimal flag: set decimal flag to 0; 
+    Clear Decimal flag instruction: set decimal flag to 0; 
 */
 void CPU::CLD(){
     BIT_SET(StatusRegister,D,0);
     pBoundaryCrossed = 0; 
 }
 /*
-    Clear Interrupt Disable: set interrupt disable to 0; 
+    Clear Interrupt Disable flag instruction : set interrupt disable to 0; 
 */
 void CPU::CLI(){
     BIT_SET(StatusRegister,ID,0);
     pBoundaryCrossed = 0; 
 }
-
-void CPU::CLV(){}
+/*
+    Clear Overflow flag instruction: set overflow flag to 0; 
+*/
+void CPU::CLV(){
+    BIT_SET(StatusRegister,OV, 0);
+    pBoundaryCrossed = 0; 
+}
+/*
+    Compare instruction: this comapres the contents of the accumulator with another memory held vale and set the zero and carry flags.
+    set carry if A >= M, set Zero flag if A = M, set if bit 7 of the result is set. 
+*/
 void CPU::CMP(){}
 void CPU::CPX(){}
 void CPU::CPY(){}
