@@ -58,9 +58,9 @@ public:
         the number of cycles that is needed to execute the instructions
     */
     struct Instruction_Set{
-        Byte (CPU::*op_code)(void) = nullptr; 
-        Byte (CPU::*addr_mode)(void) = nullptr; 
-        Byte cycles = 0x00;
+        void  (CPU::*op_code)(void) = nullptr; 
+        void  (CPU::*addr_mode)(void) = nullptr; 
+        Byte  cycles = 0x00;
 
     };
     // Lookup Table: 
@@ -71,8 +71,8 @@ public:
 
 private:
     // Variables to hold timing information
-    Byte cycles = 0x00;
-    Byte ticks = 0x00;
+    Byte  cycles = 0x00;
+    Byte  ticks = 0x00;
     // Variable to hold fetched information
     Byte fetchedData = 0x00;
     Rock currentAddress = 0x0000;
@@ -89,24 +89,25 @@ private:
 
 private: 
     //Adressing modes, the 6502 has many different ways in which memory is addressed
-    Byte IMP_Addr(); Byte IMM_Addr();   Byte ZP_Addr(); 
-    Byte ZPX_Addr(); Byte ZPY_Addr();   Byte REL_Addr();
-    Byte ABS_Addr(); Byte ABSX_Addr();  Byte ABSY_Addr(); 
-    Byte IND_Addr(); Byte IZPX_Addr();  Byte IZPY_Addr();
+    void  IMP_Addr();   void  IMM_Addr();   void  ABS_Addr(); 
+    void  ABSX_Addr();  void  ABSY_Addr();  void  IND_Addr(); 
+    void  IZPX_Addr();  void  IZPY_Addr();  void  ZP_Addr(); 
+    void  ZPX_Addr();   void  ZPY_Addr();   void  REL_Addr();
+     
 
 
 
 private: 
     // Opcodes - 56 total instructions 
-    Byte ADC(); Byte AND(); Byte ASL(); Byte BCC(); Byte BCS(); Byte BEQ(); Byte BIT(); Byte BMI(); 
-    Byte BNE(); Byte BPL(); Byte BRK(); Byte BVC(); Byte BVS(); Byte CLC(); Byte CLD(); Byte CLI(); 
-    Byte CLV(); Byte CMP(); Byte CPX(); Byte CPY(); Byte DEC(); Byte DEX(); Byte DEY(); Byte EOR(); 
-    Byte INC(); Byte INX(); Byte INY(); Byte JMP(); Byte JSR(); Byte LDA(); Byte LDX(); Byte LDY(); 
-    Byte LSR(); Byte NOP(); Byte ORA(); Byte PHA(); Byte PHP(); Byte PLA(); Byte PLP(); Byte ROL(); 
-    Byte ROR(); Byte RTI(); Byte RTS(); Byte SBC(); Byte SEC(); Byte SED(); Byte SEI(); Byte STA(); 
-    Byte STX(); Byte STY(); Byte TAX(); Byte TAY(); Byte TSX(); Byte TXA(); Byte TXS(); Byte TYA(); 
+    void  ADC(); void  AND(); void  ASL(); void  BCC(); void  BCS(); void  BEQ(); void  BIT(); void  BMI(); 
+    void  BNE(); void  BPL(); void  BRK(); void  BVC(); void  BVS(); void  CLC(); void  CLD(); void  CLI(); 
+    void  CLV(); void  CMP(); void  CPX(); void  CPY(); void  DEC(); void  DEX(); void  DEY(); void  EOR(); 
+    void  INC(); void  INX(); void  INY(); void  JMP(); void  JSR(); void  LDA(); void  LDX(); void  LDY(); 
+    void  LSR(); void  NOP(); void  ORA(); void  PHA(); void  PHP(); void  PLA(); void  PLP(); void  ROL(); 
+    void  ROR(); void  RTI(); void  RTS(); void  SBC(); void  SEC(); void  SED(); void  SEI(); void  STA(); 
+    void  STX(); void  STY(); void  TAX(); void  TAY(); void  TSX(); void  TXA(); void  TXS(); void  TYA(); 
     
-    Byte Illegal_opcode(); 
+    void  Illegal_opcode(); 
 
 }; 
 

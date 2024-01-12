@@ -56,87 +56,83 @@ void CPU::Execute(){
     Implied Addressing Mode: These instruction act directly on one or more registers or flags internal to the CPU, 
     single-byte instructions, no operand, excusively target the contents of the Accumulator. 
 */
-Byte CPU::IMP_Addr(){
+void CPU::IMP_Addr(){
     fetchedData = Accum;
-
-    return 0; 
     
 }
 /*
     Immediate addressing mode: Opcode specifies the operand and the instruction expects the next byte to be used as a value, 
-    so we need our address to point to the next byte, this will be given by the PC.
+    so we need our address to point to the next void, this will be given by the PC.
 */ 
-Byte CPU::IMM_Addr(){
+void CPU::IMM_Addr(){
     currentAddress = ProgramCounter++; 
-
-    return 0; 
 
 }
 /*
     Absolute addressing mode: provides the 16-bit address of a memory location to identify the target.
 */
-Byte CPU::ABS_Addr(){
-    Rock lowByte = bus->read(ProgramCounter);
+void CPU::ABS_Addr(){
+    Rock lowvoid = bus->read(ProgramCounter);
     ProgramCounter++; 
-    Rock highByte = bus->read(ProgramCounter);
+    Rock highvoid = bus->read(ProgramCounter);
     ProgramCounter++; 
     currentAddress = bus->read(ProgramCounter);
 
-    return 0; 
 }
-Byte CPU::ABSX_Addr(){
+/*
+    Absolute addressing mode: essentially the same thing except the X register is added and if the
+    the contents inside the X register causes the address to cross a page boundary an additional
+    cycle will need to happen and the 
+*/
+void CPU::ABSX_Addr(){
 
 }
-Byte CPU::ABSY_Addr(){
+void CPU::ABSY_Addr(){
 
 }
-Byte CPU::IND_Addr(){
+void CPU::IND_Addr(){
 
 }
-Byte CPU::IZPX_Addr(){
+void CPU::IZPX_Addr(){
 
 }
-Byte CPU::IZPY_Addr(){
+void CPU::IZPY_Addr(){
 
 }
 
 /*
     Zero Page Addressing Mode: An instruction using ZPA only has an 8-bit addressing operand, therefore the addressing can only
     be the first 256 bytes of memory ($0000 - $00FF). Meaning the significant byte is always zero and only one read occurs to
-    the low byte. 
+    the low void. 
 */ 
-Byte CPU::ZP_Addr(){
-    Rock lowByte = bus->read(ProgramCounter);
+void CPU::ZP_Addr(){
+    Rock lowvoid = bus->read(ProgramCounter);
     ProgramCounter++;
-    Rock highByte = 0x00;
-    currentAddress = lowByte | (highByte << 8);
-
-    return 0; 
+    Rock highvoid = 0x00;
+    currentAddress = lowvoid | (highvoid << 8);
 }
 
 /*
     Zero Page + X Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
     X register to the low-byte; 
 */
-Byte CPU::ZPX_Addr(){
-    Rock lowByte = (bus->read(ProgramCounter) + X); 
+void CPU::ZPX_Addr(){
+    Rock lowvoid = (bus->read(ProgramCounter) + X); 
     ProgramCounter++;
-    Rock highByte = 0x00;
-    currentAddress = lowByte | (highByte << 8);
-    return 0; 
+    Rock highvoid = 0x00;
+    currentAddress = lowvoid | (highvoid << 8);
 }
 /*
     Zero Page + Y Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
-    Y register to the low-byte; 
+    Y register to the low-void; 
 */
-Byte CPU::ZPY_Addr(){
-    Rock lowByte = (bus->read(ProgramCounter) + Y); 
+void CPU::ZPY_Addr(){
+    Rock lowvoid = (bus->read(ProgramCounter) + Y); 
     ProgramCounter++;
-    Rock highByte = 0x00;
-    currentAddress = lowByte | (highByte << 8);
-    return 0; 
+    Rock highvoid = 0x00;
+    currentAddress = lowvoid | (highvoid << 8);
 }
-Byte CPU::REL_Addr(){
+void CPU::REL_Addr(){
 
 
 }
@@ -147,70 +143,70 @@ Byte CPU::REL_Addr(){
 // INSTRUCTION SET
 
 // Add With Carry
-Byte CPU::ADC(){}
+void CPU::ADC(){}
 
 // And (with the Accumulator)
-Byte CPU::AND(){}
+void CPU::AND(){}
 
 // Arithmethic Shift Left
-Byte CPU::ASL(){}
+void CPU::ASL(){}
 
 // Branch on Clear Carry
-Byte CPU::BCC(){}
+void CPU::BCC(){}
 
-Byte CPU::BCS(){}
+void CPU::BCS(){}
 
-Byte CPU::BEQ(){}
-Byte CPU::BIT(){}
-Byte CPU::BMI(){}
-Byte CPU::BNE(){}
-Byte CPU::BPL(){}
-Byte CPU::BRK(){}
-Byte CPU::BVC(){}
-Byte CPU::BVS(){}
-Byte CPU::CLC(){}
-Byte CPU::CLD(){}
-Byte CPU::CLI(){}
-Byte CPU::CLV(){}
-Byte CPU::CMP(){}
-Byte CPU::CPX(){}
-Byte CPU::CPY(){}
-Byte CPU::DEC(){}
-Byte CPU::DEX(){}
-Byte CPU::DEY(){}
-Byte CPU::EOR(){}
-Byte CPU::INC(){}
-Byte CPU::INX(){}
-Byte CPU::INY(){}
-Byte CPU::JMP(){}
-Byte CPU::JSR(){}
-Byte CPU::LDX(){}
-Byte CPU::LDY(){}
-Byte CPU::LSR(){}
-Byte CPU::NOP(){}
-Byte CPU::ORA(){}
-Byte CPU::PHA(){}
-Byte CPU::PHP(){}
-Byte CPU::PLA(){}
-Byte CPU::PLP(){}
-Byte CPU::ROL(){}
-Byte CPU::ROR(){}
-Byte CPU::RTI(){}
-Byte CPU::RTS(){}
-Byte CPU::SBC(){}
-Byte CPU::SEC(){}
-Byte CPU::SED(){}
-Byte CPU::SEI(){}
-Byte CPU::STA(){}
-Byte CPU::STX(){}
-Byte CPU::STY(){}
-Byte CPU::TAX(){}
-Byte CPU::TAY(){}
-Byte CPU::TXS(){}
-Byte CPU::TXA(){}
-Byte CPU::TXS(){}
-Byte CPU::TYA(){}
+void CPU::BEQ(){}
+void CPU::BIT(){}
+void CPU::BMI(){}
+void CPU::BNE(){}
+void CPU::BPL(){}
+void CPU::BRK(){}
+void CPU::BVC(){}
+void CPU::BVS(){}
+void CPU::CLC(){}
+void CPU::CLD(){}
+void CPU::CLI(){}
+void CPU::CLV(){}
+void CPU::CMP(){}
+void CPU::CPX(){}
+void CPU::CPY(){}
+void CPU::DEC(){}
+void CPU::DEX(){}
+void CPU::DEY(){}
+void CPU::EOR(){}
+void CPU::INC(){}
+void CPU::INX(){}
+void CPU::INY(){}
+void CPU::JMP(){}
+void CPU::JSR(){}
+void CPU::LDX(){}
+void CPU::LDY(){}
+void CPU::LSR(){}
+void CPU::NOP(){}
+void CPU::ORA(){}
+void CPU::PHA(){}
+void CPU::PHP(){}
+void CPU::PLA(){}
+void CPU::PLP(){}
+void CPU::ROL(){}
+void CPU::ROR(){}
+void CPU::RTI(){}
+void CPU::RTS(){}
+void CPU::SBC(){}
+void CPU::SEC(){}
+void CPU::SED(){}
+void CPU::SEI(){}
+void CPU::STA(){}
+void CPU::STX(){}
+void CPU::STY(){}
+void CPU::TAX(){}
+void CPU::TAY(){}
+void CPU::TXS(){}
+void CPU::TXA(){}
+void CPU::TXS(){}
+void CPU::TYA(){}
 
-Byte CPU::Illegal_opcode(){
-    return 0; 
+void CPU::Illegal_opcode(){
+
 }
