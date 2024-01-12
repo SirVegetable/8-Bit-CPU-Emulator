@@ -72,48 +72,17 @@ Byte CPU::IMM_Addr(){
     return 0; 
 
 }
-
 /*
-    Zero Page Addressing Mode: An instruction using ZPA only has an 8-bit addressing operand, therefore the addressing can only
-    be the first 256 bytes of memory ($0000 - $00FF). Meaning the significant byte is always zero and only one read occurs to
-    the low byte. 
-*/ 
-Byte CPU::ZP_Addr(){
-    Byte lowByte = bus->read(ProgramCounter);
-    ProgramCounter++;
-    Byte highByte = 0x00;
-    currentAddress = static_cast<Rock>(lowByte | (highByte << 8));
-
-    return 0; 
-}
-
-/*
-    Zero Page + X Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
-    X register to the low-byte; 
+    Absolute addressing mode: provides the 16-bit address of a memory location to identify the target.
 */
-Byte CPU::ZPX_Addr(){
-    Byte lowByte = (bus->read(ProgramCounter) + X); 
-    ProgramCounter++;
-    Byte highByte = 0x00;
-    currentAddress = static_cast<Rock> (lowByte | (highByte << 8));
-    return 0; 
-}
-/*
-    Zero Page + Y Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
-    Y register to the low-byte; 
-*/
-Byte CPU::ZPY_Addr(){
-    Byte lowByte = (bus->read(ProgramCounter) + Y); 
-    ProgramCounter++;
-    Byte highByte = 0x00;
-    currentAddress = static_cast<Rock> (lowByte | (highByte << 8));
-    return 0; 
-}
-Byte CPU::REL_Addr(){
-
-}
 Byte CPU::ABS_Addr(){
+    Rock lowByte = bus->read(ProgramCounter);
+    ProgramCounter++; 
+    Rock highByte = bus->read(ProgramCounter);
+    ProgramCounter++; 
+    currentAddress = bus->read(ProgramCounter);
 
+    return 0; 
 }
 Byte CPU::ABSX_Addr(){
 
@@ -130,6 +99,48 @@ Byte CPU::IZPX_Addr(){
 Byte CPU::IZPY_Addr(){
 
 }
+
+/*
+    Zero Page Addressing Mode: An instruction using ZPA only has an 8-bit addressing operand, therefore the addressing can only
+    be the first 256 bytes of memory ($0000 - $00FF). Meaning the significant byte is always zero and only one read occurs to
+    the low byte. 
+*/ 
+Byte CPU::ZP_Addr(){
+    Rock lowByte = bus->read(ProgramCounter);
+    ProgramCounter++;
+    Rock highByte = 0x00;
+    currentAddress = lowByte | (highByte << 8);
+
+    return 0; 
+}
+
+/*
+    Zero Page + X Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
+    X register to the low-byte; 
+*/
+Byte CPU::ZPX_Addr(){
+    Rock lowByte = (bus->read(ProgramCounter) + X); 
+    ProgramCounter++;
+    Rock highByte = 0x00;
+    currentAddress = lowByte | (highByte << 8);
+    return 0; 
+}
+/*
+    Zero Page + Y Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
+    Y register to the low-byte; 
+*/
+Byte CPU::ZPY_Addr(){
+    Rock lowByte = (bus->read(ProgramCounter) + Y); 
+    ProgramCounter++;
+    Rock highByte = 0x00;
+    currentAddress = lowByte | (highByte << 8);
+    return 0; 
+}
+Byte CPU::REL_Addr(){
+
+
+}
+
 
 
 
