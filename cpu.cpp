@@ -121,8 +121,22 @@ void CPU::ABSY_Addr(){
     }
 
 }
-void CPU::IND_Addr(){
+/*
+    Indirect addressing mode: This mode is only used to by the JMP instructions, what it does is it looks up a given 
+    address and uses the contents of this address for the low-byte and the next one as the high byte for the effective 
+    address where the instruction is executed. For example if location $0120 contains $FC and location $0121 contains 
+    $BA then the instruction JMP ($0120) will cause the next instruction execution to occur at $BAFC 
+    (e.g. the contents of $0120 and $0121).
 
+    Additionally, there is a bug in the 6502 cpu where if the first location is $XXFF, then the location used for the 
+    high bytes will be the contents of $XX00 instead of XX + 1; Ex. if address $3000 contains $40, $30FF contains $20
+    and $3100 contains $50. JMP ($30FF) will transfer control to $4020 instead of $5020. 
+
+
+*/
+void CPU::IND_Addr(){
+    Rock pointerAddress = bus->read(ProgramCounter++);
+    
 }
 void CPU::IZPX_Addr(){
 
