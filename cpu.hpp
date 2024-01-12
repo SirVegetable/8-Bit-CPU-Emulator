@@ -75,7 +75,7 @@ private:
     Byte  ticks = 0x00;
     // Variable to hold fetched information
     Byte fetchedData = 0x00;
-    Rock currentAddress = 0x0000;
+    Rock targetAddress = 0x0000;
     
     //The 6502 branching instructions have a specified range(explaination in the Relative Addressing mode)
     Rock relativeAddress = 0x0000; 

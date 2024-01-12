@@ -65,7 +65,7 @@ void CPU::IMP_Addr(){
     so we need our address to point to the next void, this will be given by the PC.
 */ 
 void CPU::IMM_Addr(){
-    currentAddress = ProgramCounter++; 
+    targetAddress = ProgramCounter++; 
 
 }
 /*
@@ -76,7 +76,7 @@ void CPU::ABS_Addr(){
     ProgramCounter++; 
     Rock highByte = bus->read(ProgramCounter);
     ProgramCounter++; 
-    currentAddress = lowByte | (highByte << 8);
+    targetAddress = lowByte | (highByte << 8);
 
 }
 /*
@@ -92,10 +92,10 @@ void CPU::ABSX_Addr(){
     ProgramCounter++; 
     Rock highByte = bus->read(ProgramCounter);
     ProgramCounter++;
-    currentAddress = lowByte | (highByte << 8);
-    currentAddress += X;
+    targetAddress = lowByte | (highByte << 8);
+    targetAddress += X;
 
-    if(currentAddress &= 0xFF00 != highByte){
+    if(targetAddress &= 0xFF00 != highByte){
           
     }
 
@@ -113,10 +113,10 @@ void CPU::ABSY_Addr(){
     ProgramCounter++; 
     Rock highByte = bus->read(ProgramCounter);
     ProgramCounter++;
-    currentAddress = lowByte | (highByte << 8);
-    currentAddress += Y;
+    targetAddress = lowByte | (highByte << 8);
+    targetAddress += Y;
 
-    if(currentAddress &= 0xFF00 != highByte){
+    if(targetAddress &= 0xFF00 != highByte){
           
     }
 
@@ -154,7 +154,7 @@ void CPU::ZP_Addr(){
     Rock lowByte = bus->read(ProgramCounter);
     ProgramCounter++;
     Rock highByte = 0x00;
-    currentAddress = lowByte | (highByte << 8);
+    targetAddress = lowByte | (highByte << 8);
 }
 
 /*
@@ -165,7 +165,7 @@ void CPU::ZPX_Addr(){
     Rock lowByte = (bus->read(ProgramCounter) + X); 
     ProgramCounter++;
     Rock highByte = 0x00;
-    currentAddress = lowByte | (highByte << 8);
+    targetAddress = lowByte | (highByte << 8);
 }
 /*
     Zero Page + Y Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
@@ -175,7 +175,7 @@ void CPU::ZPY_Addr(){
     Rock lowByte = (bus->read(ProgramCounter) + Y); 
     ProgramCounter++;
     Rock highByte = 0x00;
-    currentAddress = lowByte | (highByte << 8);
+    targetAddress = lowByte | (highByte << 8);
 }
 
 void CPU::REL_Addr(){
@@ -227,14 +227,20 @@ void CPU::BIT(){
 } 
 /*
     Branch If Minus instruction: if the negative flag is set then add the relative displacemenet to the program counter to cause a branch to
-    the new location. This instruction could increment cycles if branch succeeeds and +2 cycles if its to a new page. 
+    the new location. This instruction increments cycles if branch succeeeds and +2 cycles if its to a new page. 
 */  
 void CPU::BMI(){
     bool nFlagCheck = BIT_GRAB(StatusRegister, N);
     if(nFlagCheck){
-        currentAddress = ProgramCounter + relativeAddress; 
-
-
+        Rock newPC = ProgramCounter + relativeAddress; 
+        targetAddress = newPC;
+        cycles++;
+        // check page boundary by checking if the highByte changes
+        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
+            cycles++; 
+        }
+        //set program counter to the new TargetAddress
+        ProgramCounter = targetAddress; 
     }
 }
 void CPU::BNE(){}
