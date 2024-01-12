@@ -328,10 +328,32 @@ void CPU::BRK(){
     ProgramCounter = static_cast<Rock>((read(0xFFFE) | read(0xFFFF)));
 
 }
-void CPU::BVC(){
-    
+/*
+    Branch if 
+
+*/
+void CPU::BVC(){}
+/*
+    Branch If Overflow Clear instruction: if the Overflow flag is set then add the relative displacement to the program counter and branch to new
+    location.
+*/
+void CPU::BVS(){
+    bool overflowFlag = BIT_GRAB(StatusRegister,OV);
+    if(overflowFlag){
+        Rock newPC = ProgramCounter + relativeDisplacement; 
+        targetAddress = newPC;
+        
+        if((targetAddress &= 0xFF00) != (ProgramCounter &= 0xFF00)){
+            pBoundaryCrossed = 1; 
+        }
+        else{
+            pBoundaryCrossed = 0; 
+        }
+        ProgramCounter = targetAddress;
+    }
+
 }
-void CPU::BVS(){}
+
 void CPU::CLC(){}
 void CPU::CLD(){}
 void CPU::CLI(){}
