@@ -84,15 +84,30 @@ Byte CPU::ZP_Addr(){
     Byte highByte = 0x00;
     currentAddress = static_cast<Rock>(lowByte | (highByte << 8));
 
+    return 0; 
 }
 
-// Zero Page + X Register Addressing Mode: 
+/*
+    Zero Page + X Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
+    X register to the low-byte; 
+*/
 Byte CPU::ZPX_Addr(){
-    
+    Byte lowByte = (bus->read(ProgramCounter) + X); 
+    ProgramCounter++;
+    Byte highByte = 0x00;
+    currentAddress = static_cast<Rock> (lowByte | (highByte << 8));
+    return 0; 
 }
-// Zero Page + Y Register Adressing Mode: 
+/*
+    Zero Page + Y Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
+    Y register to the low-byte; 
+*/
 Byte CPU::ZPY_Addr(){
-
+    Byte lowByte = (bus->read(ProgramCounter) + Y); 
+    ProgramCounter++;
+    Byte highByte = 0x00;
+    currentAddress = static_cast<Rock> (lowByte | (highByte << 8));
+    return 0; 
 }
 Byte CPU::REL_Addr(){
 
