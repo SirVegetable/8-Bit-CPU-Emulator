@@ -77,8 +77,9 @@ private:
     Byte fetchedData = 0x00;
     Rock targetAddress = 0x0000;
     
-    //The 6502 branching instructions have a specified range(explaination in the Relative Addressing mode)
-    Rock relativeAddress = 0x0000; 
+    // The 6502 branching instructions have a specified range(explaination in the Relative addressing mode) and branching instructions 
+    // take a relative displacement used to add to the program counter. 
+    Rock relativeDisplacement = 0x0000; 
     // Variable to check if the instruction crosses a page boundary
     Byte pBoundaryCrossed = 0x00;
 

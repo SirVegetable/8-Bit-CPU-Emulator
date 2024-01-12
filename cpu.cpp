@@ -62,7 +62,7 @@ void CPU::IMP_Addr(){
 }
 /*
     Immediate addressing mode: Opcode specifies the operand and the instruction expects the next byte to be used as a value, 
-    so we need our address to point to the next void, this will be given by the PC.
+    so we need our address to point to the next byte, this will be given by the PC.
 */ 
 void CPU::IMM_Addr(){
     targetAddress = ProgramCounter++; 
@@ -136,6 +136,7 @@ void CPU::ABSY_Addr(){
 */
 void CPU::IND_Addr(){
     Rock pointerAddress = bus->read(ProgramCounter++);
+    pBoundaryCrossed = 0; 
     
 }
 void CPU::IZPX_Addr(){
@@ -155,6 +156,7 @@ void CPU::ZP_Addr(){
     ProgramCounter++;
     Rock highByte = 0x00;
     targetAddress = lowByte | (highByte << 8);
+    pBoundaryCrossed = 0; 
 }
 
 /*
@@ -166,6 +168,7 @@ void CPU::ZPX_Addr(){
     ProgramCounter++;
     Rock highByte = 0x00;
     targetAddress = lowByte | (highByte << 8);
+    pBoundaryCrossed = 0; 
 }
 /*
     Zero Page + Y Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
@@ -176,6 +179,7 @@ void CPU::ZPY_Addr(){
     ProgramCounter++;
     Rock highByte = 0x00;
     targetAddress = lowByte | (highByte << 8);
+    pBoundaryCrossed = 0; 
 }
 
 void CPU::REL_Addr(){
@@ -224,26 +228,42 @@ void CPU::BIT(){
     BIT_SET(StatusRegister, N, (fetchedData & (1<<7)));
     BIT_SET(StatusRegister,OV,(fetchedData & (1 << 6)));
 
+    pBoundaryCrossed = 0; 
 } 
 /*
     Branch If Minus instruction: if the negative flag is set then add the relative displacemenet to the program counter to cause a branch to
-    the new location. This instruction increments cycles if branch succeeeds and +2 cycles if its to a new page. 
+    the new location. This instruction increments cycles if branch succeeeds and +1 more cycle if its to a new page. 
 */  
 void CPU::BMI(){
     bool nFlagCheck = BIT_GRAB(StatusRegister, N);
     if(nFlagCheck){
-        Rock newPC = ProgramCounter + relativeAddress; 
+        Rock newPC = ProgramCounter + relativeDisplacement; 
         targetAddress = newPC;
         cycles++;
         // check page boundary by checking if the highByte changes
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
-            cycles++; 
+            pBoundaryCrossed = 1; 
         }
         //set program counter to the new TargetAddress
         ProgramCounter = targetAddress; 
     }
 }
-void CPU::BNE(){}
+/*
+    Branch If Not Equal: if the Zero flag is clear then add the relative displacement to program counter to cause a branch to a new location.
+    This instruction will increment by one cycles and by an additional cycle if a page boundary is crossed
+*/
+void CPU::BNE(){
+    bool nFlagCheck = BIT_GRAB(StatusRegister,N);
+    if(nFlagCheck){
+        Rock newPC = ProgramCounter + relativeDisplacement;
+        targetAddress = newPC; 
+        // check page boundary by checking if the highByte changes
+        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
+            pBoundaryCrossed = 1; 
+        }
+        ProgramCounter = targetAddress; 
+    }
+}
 void CPU::BPL(){}
 void CPU::BRK(){}
 void CPU::BVC(){}
