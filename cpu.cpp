@@ -177,6 +177,7 @@ void CPU::ZPY_Addr(){
     Rock highByte = 0x00;
     currentAddress = lowByte | (highByte << 8);
 }
+
 void CPU::REL_Addr(){
 
 
@@ -211,13 +212,31 @@ void CPU::BCC(){}
 void CPU::BCS(){}
 
 void CPU::BEQ(){}
-
+/*
+    BIT instruction: the instruction is used to test if one or more bits are set in a target memory location. Accumulator is ANDed with
+    the value in memory to set or clear the Zero flag, result is not kept. Bits 7 and 6 of the value from memory are copied into the N
+    and OV flags.
+*/
 void CPU::BIT(){
     fetchedData = Fetch();
     Byte throwAway = Accum & fetchedData; 
-    BIT_SET(StatusRegister,);
+    BIT_SET(StatusRegister,Z, (throwAway == 0x00));
+    BIT_SET(StatusRegister, N, (fetchedData & (1<<7)));
+    BIT_SET(StatusRegister,OV,(fetchedData & (1 << 6)));
+
+} 
+/*
+    Branch If Minus instruction: if the negative flag is set then add the relative displacemenet to the program counter to cause a branch to
+    the new location. This instruction could increment cycles if branch succeeeds and +2 cycles if its to a new page. 
+*/  
+void CPU::BMI(){
+    bool nFlagCheck = BIT_GRAB(StatusRegister, N);
+    if(nFlagCheck){
+        currentAddress = ProgramCounter + relativeAddress; 
+
+
+    }
 }
-void CPU::BMI(){}
 void CPU::BNE(){}
 void CPU::BPL(){}
 void CPU::BRK(){}
