@@ -39,22 +39,22 @@ void CPU::write(Rock address, Byte data ){
     return bus->write(address, data);
 }
 void CPU::push(Byte data){
-    
+
 }
 Byte CPU::pop(){
 
 }
 
-Byte CPU::Fetch(){
-    Byte fetched_data = bus->read(ProgramCounter);
+Byte CPU::fetch(){
+    Byte fetched_data = read(ProgramCounter);
     ProgramCounter++;
     return fetched_data; 
 }
-void CPU::Execute(){
+void CPU::execute(){
     // if cycles is 0 then the next instruction can be executed 
     if(cycles == 0){
         //fetch the opcode
-        Byte opcode = Fetch();
+        Byte opcode = fetch();
         
 
 
@@ -83,9 +83,9 @@ void CPU::IMM_Addr(){
     Absolute addressing mode: provides the 16-bit address of a memory location to identify the target.
 */
 void CPU::ABS_Addr(){
-    Rock lowByte = bus->read(ProgramCounter);
+    Rock lowByte = read(ProgramCounter);
     ProgramCounter++; 
-    Rock highByte = bus->read(ProgramCounter);
+    Rock highByte = read(ProgramCounter);
     ProgramCounter++; 
     targetAddress = lowByte | (highByte << 8);
 
@@ -99,9 +99,9 @@ void CPU::ABS_Addr(){
     added. 
 */
 void CPU::ABSX_Addr(){
-    Rock lowByte = bus->read(ProgramCounter);
+    Rock lowByte = read(ProgramCounter);
     ProgramCounter++; 
-    Rock highByte = bus->read(ProgramCounter);
+    Rock highByte = read(ProgramCounter);
     ProgramCounter++;
     targetAddress = lowByte | (highByte << 8);
     targetAddress += X;
@@ -120,9 +120,9 @@ void CPU::ABSX_Addr(){
     added. 
 */
 void CPU::ABSY_Addr(){
-    Rock lowByte = bus->read(ProgramCounter);
+    Rock lowByte = read(ProgramCounter);
     ProgramCounter++; 
-    Rock highByte = bus->read(ProgramCounter);
+    Rock highByte = read(ProgramCounter);
     ProgramCounter++;
     targetAddress = lowByte | (highByte << 8);
     targetAddress += Y;
@@ -149,7 +149,7 @@ void CPU::ABSY_Addr(){
 
 */
 void CPU::IND_Addr(){
-    Rock pointerAddress = bus->read(ProgramCounter++);
+    Rock pointerAddress = read(ProgramCounter++);
     pBoundaryCrossed = 0; 
     
 }
@@ -166,7 +166,7 @@ void CPU::IZPY_Addr(){
     the low void. 
 */ 
 void CPU::ZP_Addr(){
-    Rock lowByte = bus->read(ProgramCounter);
+    Rock lowByte = read(ProgramCounter);
     ProgramCounter++;
     Rock highByte = 0x00;
     targetAddress = lowByte | (highByte << 8);
@@ -178,7 +178,7 @@ void CPU::ZP_Addr(){
     X register to the low-byte; 
 */
 void CPU::ZPX_Addr(){
-    Rock lowByte = (bus->read(ProgramCounter) + X); 
+    Rock lowByte = (read(ProgramCounter) + X); 
     ProgramCounter++;
     Rock highByte = 0x00;
     targetAddress = lowByte | (highByte << 8);
@@ -189,7 +189,7 @@ void CPU::ZPX_Addr(){
     Y register to the low-void; 
 */
 void CPU::ZPY_Addr(){
-    Rock lowByte = (bus->read(ProgramCounter) + Y); 
+    Rock lowByte = (read(ProgramCounter) + Y); 
     ProgramCounter++;
     Rock highByte = 0x00;
     targetAddress = lowByte | (highByte << 8);
@@ -214,7 +214,7 @@ void CPU::ADC(){}
     Flags: Z, N
 */ 
 void CPU::AND(){
-    fetchedData = Fetch();
+    fetchedData = fetch();
 
     Accum = Accum & fetchedData;
     BIT_SET(StatusRegister,Z,(Accum == 0x00));
@@ -237,7 +237,7 @@ void CPU::BEQ(){}
     and OV flags.
 */
 void CPU::BIT(){
-    fetchedData = Fetch();
+    fetchedData = fetch();
     Byte throwAway = Accum & fetchedData; 
     BIT_SET(StatusRegister,Z, (throwAway == 0x00));
     BIT_SET(StatusRegister, N, (fetchedData & (1<<7)));
@@ -255,7 +255,7 @@ void CPU::BMI(){
         Rock newPC = ProgramCounter + relativeDisplacement; 
         targetAddress = newPC;
         cycles++;
-        // check page boundary by checking if the highByte changes
+        
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
             pBoundaryCrossed = 1; 
         }
@@ -275,7 +275,7 @@ void CPU::BNE(){
     if(nFlagCheck){
         Rock newPC = ProgramCounter + relativeDisplacement;
         targetAddress = newPC; 
-        // check page boundary by checking if the highByte changes
+        
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
             pBoundaryCrossed = 1; 
         }
@@ -294,7 +294,7 @@ void CPU::BPL(){
     if(!nFlagCheck){
         Rock newPC = ProgramCounter + relativeDisplacement; 
         targetAddress = newPC;
-        // check page boundary by checking if the highByte changes
+        
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
             pBoundaryCrossed = 1; 
         }

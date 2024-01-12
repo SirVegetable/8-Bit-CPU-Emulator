@@ -8,7 +8,7 @@ class Bus;
 class CPU
 {
 public:
-    // the flags that make up the 8 bits, shift the 1 to the left 
+    // --------------FLAGS--------------
     enum FLAGS{
         C = 1 << 0,  // Carry
         Z = 1 << 1,  // Zero
@@ -20,66 +20,49 @@ public:
         N = 1 << 7   // Negative
     };
     
-    Bus *bus; //pointer to the bus which connects the bus to the cpu and allows for read and write
-
-
-    Byte Accum,X,Y = 0x00; //Acumulator, X and Y Registers
-    Byte StackPointer= 0x00;      //Stack Pointer
-    Rock ProgramCounter= 0x0000; //Program Counter
-    Byte StatusRegister = 0x00; //Status Register 
-
-    void busConnection(Bus *b); // Connecting CPU to the bus
-    
-
-    void Reset();
-    void NonMaskableInterrupt();
-    void InterruptRequest(); 
-    
-    // Fetch is used for instructions 
-    Byte Fetch();
-
-    Byte read(Rock Addr);             //CPU read function 
-    void write(Rock addr, Byte data); //CPU write function
-    
-    void push(Byte data); // CPU pushes to stack 
-    Byte pop();           // CPU pops to stack 
+    Bus *bus;                     // Pointer to the bus which connects the bus to the cpu and allows for read and write
+    Byte Accum,X,Y = 0x00;        // Acumulator, X and Y Registers
+    Byte StackPointer= 0x00;      // Stack Pointer
+    Rock ProgramCounter= 0x0000;  // Program Counter
+    Byte StatusRegister = 0x00;   // Status Register 
 
     
-    //function that executes the instructions
-    void Execute();
+    
+    void busConnection(Bus *b);  // Connecting CPU to the bus
+    void Reset();                // Reset request function
+    void NonMaskableInterrupt(); // NMI function 
+    void InterruptRequest();     // IRQ function
+    
+    
+    Byte fetch();                       // Fetch is used for instructions 
+    void execute();                     // function that executes the instructions
  
 
+    Byte read(Rock Addr);               // CPU read function 
+    void write(Rock addr, Byte data);   // CPU write function
+    Byte pop();                         // CPU pops to stack
+    void push(Byte data);               // CPU pushes to stack 
 
-    /* 
-        The instruction set for our lookup table will be two function pointers: The first one is the opcode function to be executed
-        and the second function pointer will be to the address mode that is used for the instruction. Lastly this struct will hold
-        the number of cycles that is needed to execute the instructions
-    */
+
+    // --------------Instruction Set--------------
     struct Instruction_Set{
-        void  (CPU::*op_code)(void) = nullptr; 
-        void  (CPU::*addr_mode)(void) = nullptr; 
-        Byte  cycles = 0x00;
+        void  (CPU::*op_code)(void) = nullptr;    // function pointer to the first opcode to used for instruction 
+        void  (CPU::*addr_mode)(void) = nullptr;  // function pointer to the addressing mode used for instruction 
+        Byte  cycles = 0x00;                      // number of cycles the instruction will take 
 
     };
-    // Lookup Table: 
-    std::vector<Instruction_Set> lookup; 
+    std::vector<Instruction_Set> lookup;          // Lookup Table
     
 
 
 
 private:
-    // Variables to hold timing information
-    Byte  cycles = 0x00;
-    Byte  ticks = 0x00;
-    // Variable to hold fetched information
-    Byte fetchedData = 0x00;
-    Rock targetAddress = 0x0000;
-    
-    // The 6502 branching instructions have a specified range(explaination in the Relative addressing mode) and branching instructions 
-    // take a relative displacement used to add to the program counter. 
-    Rock relativeDisplacement = 0x0000; 
-    // Variable to check if the instruction crosses a page boundary
-    bool pBoundaryCrossed = 0;
+    Byte cycles = 0x00;                   // variable to track cycles 
+    Byte ticks = 0x00;                    // tick to measure clock 
+    Byte fetchedData = 0x00;              // holds the data that has been fetched 
+    Rock targetAddress = 0x0000;          // holds the current target address  
+    Rock relativeDisplacement = 0x0000;   // relative displacement used to add to the program counter when branching occurs 
+    bool pBoundaryCrossed = 0;            // Variable to check if the instruction crosses a page boundary
 
 
      
@@ -87,7 +70,7 @@ private:
 
 
 private: 
-    //Adressing modes, the 6502 has many different ways in which memory is addressed
+    // --------------Adressing modes--------------
     void  IMP_Addr();   void  IMM_Addr();   void  ABS_Addr(); 
     void  ABSX_Addr();  void  ABSY_Addr();  void  IND_Addr(); 
     void  IZPX_Addr();  void  IZPY_Addr();  void  ZP_Addr(); 
@@ -97,7 +80,7 @@ private:
 
 
 private: 
-    // Opcodes - 56 total instructions 
+    // --------------Opcodes--------------
     void  ADC(); void  AND(); void  ASL(); void  BCC(); void  BCS(); void  BEQ(); void  BIT(); void  BMI(); 
     void  BNE(); void  BPL(); void  BRK(); void  BVC(); void  BVS(); void  CLC(); void  CLD(); void  CLI(); 
     void  CLV(); void  CMP(); void  CPX(); void  CPY(); void  DEC(); void  DEX(); void  DEY(); void  EOR(); 
