@@ -1,5 +1,6 @@
 #include "cpu.hpp"
 #include "typedefs.h"
+#include "bus.hpp"
 
 //Constructor
 CPU::CPU()
@@ -14,6 +15,9 @@ CPU::CPU()
 CPU::~CPU()
 {
 
+}
+void CPU::busConnection(Bus *b){
+    bus = b; 
 }
 
 
@@ -31,7 +35,7 @@ void CPU::InterruptRequest(){
 
 
 Byte CPU::Fetch(){
-    Byte fetched_data = bus.read(ProgramCounter);
+    Byte fetched_data = bus->read(ProgramCounter);
     ProgramCounter++;
     return fetched_data; 
 }
@@ -53,17 +57,28 @@ void CPU::Execute(){
     single-byte instructions, no operand, excusively target the contents of the Accumulator. 
 */
 Byte CPU::IMP_Addr(){
-    fetchedData = Accum; 
+    fetchedData = Accum;
+
+    return 0; 
     
 }
-// Immediate addressing mode: 
+/*
+    Immediate addressing mode: Opcode specifies the operand and the instruction expects the next byte to be used as a value, 
+    so we need our address to point to the next byte, this will be given by the PC.
+*/ 
 Byte CPU::IMM_Addr(){
-    
-    
+    currentAddress = ProgramCounter++; 
+
+    return 0; 
+
 }
 
-// Zero Page Addressing Mode: 
+/*
+    Zero Page Addressing Mode: An instruction using ZPA only has an 8-bit addressing operand, therefore the addressing can only
+    be the first 256 bytes of memory ($0000 - $00FF). Meaning the significant byte is always zero, only one read occurs 
+*/ 
 Byte CPU::ZP_Addr(){
+    currentAddress = bus->read(ProgramCounter);
 
 }
 

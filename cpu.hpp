@@ -4,10 +4,11 @@
 #include <array> 
 #include "typedefs.h"
 #include "Memory.hpp"
-#include "bus.hpp"
+
 
 #define BIT_GRAB(SR,f)(((SR & f) > 0) ? 1 : 0);
 #define BIT_SET(SR,f,bl) if(bl){ (SR) |= (f); } else { (SR) &= (~f); };
+class Bus;
 
 class CPU
 {
@@ -24,7 +25,7 @@ public:
         N = 1 << 7   // Negative
     };
     //Bus member value which connects the bus to the cpu and allows for read and write
-    Bus bus; 
+    Bus *bus; 
 
     //Acumulator, X and Y Registers
     Byte Accum,X,Y = 0x00;
@@ -35,19 +36,20 @@ public:
     //Status Register for the flags
     Byte StatusRegister = 0x00; 
 
-    
+    // Connecting CPU to the bus
+    void busConnection(Bus *b);
     
     //functions that handle 6502 interrupts
     void Reset();
     void NonMaskableInterrupt();
     void InterruptRequest(); 
-
-
+    
     // Fetch is used for instructions 
     Byte Fetch();
-
+    
     //function that executes the instructions
     void Execute();
+ 
 
 
     /* 
@@ -73,7 +75,14 @@ private:
     Byte ticks = 0x00;
     // Variable to hold fetched information
     Byte fetchedData = 0x00;
-    Rock current_address = 0x0000;
+    Rock currentAddress = 0x0000;
+    
+    //The 6502 branching instructions have a specified range(explaination in the Relative Addressing mode)
+    Rock relativeAddress = 0x0000; 
+    // Variable to check if the instruction crosses a page boundary
+    Byte pageBoundary = 0x00;
+
+
      
 
 
