@@ -253,5 +253,5 @@ void CPU::TXS(){}
 void CPU::TYA(){}
 
 void CPU::Illegal_opcode(){
-
+    pBoundaryCrossed = 0; 
 }
