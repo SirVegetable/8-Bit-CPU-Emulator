@@ -75,10 +75,14 @@ Byte CPU::IMM_Addr(){
 
 /*
     Zero Page Addressing Mode: An instruction using ZPA only has an 8-bit addressing operand, therefore the addressing can only
-    be the first 256 bytes of memory ($0000 - $00FF). Meaning the significant byte is always zero, only one read occurs 
+    be the first 256 bytes of memory ($0000 - $00FF). Meaning the significant byte is always zero and only one read occurs to
+    the low byte. 
 */ 
 Byte CPU::ZP_Addr(){
-    currentAddress = bus->read(ProgramCounter);
+    Byte lowByte = bus->read(ProgramCounter);
+    ProgramCounter++;
+    Byte highByte = 0x00;
+    currentAddress = static_cast<Rock>(lowByte | (highByte << 8));
 
 }
 
