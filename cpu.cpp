@@ -96,7 +96,7 @@ void CPU::ABSX_Addr(){
     currentAddress += X;
 
     if(currentAddress &= 0xFF00 != highByte){
-        pBoundaryCrossed++;  
+          
     }
 
 }
@@ -117,7 +117,7 @@ void CPU::ABSY_Addr(){
     currentAddress += Y;
 
     if(currentAddress &= 0xFF00 != highByte){
-        pBoundaryCrossed++;  
+          
     }
 
 }
