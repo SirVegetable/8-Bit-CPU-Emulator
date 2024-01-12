@@ -1,6 +1,5 @@
 
-#ifndef MEMORY_HPP
-#define MEMORY_HPP
+#pragma once
 #include <iostream>
 #include <array>
 #include "typedefs.h"
@@ -19,8 +18,7 @@ public:
     void write(Rock addr, Byte dataToMem);
 
     //member values 
-    static constexpr std::size_t MaxMemSize = 64 * 1024;
-    std::array<Byte,MaxMemSize> ram; 
+    static constexpr std::size_t maxMemSize = 64 * 1024;
+    std::array<Byte,maxMemSize> ram; 
 };
 
-#endif

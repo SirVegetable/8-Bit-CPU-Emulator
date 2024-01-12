@@ -1,7 +1,9 @@
+#pragma once 
+
 #include "Memory.hpp"
 #include "cpu.hpp"
-#ifndef BUS_HPP
-#define BUS_HPP
+#include "typedefs.h"
+
 class Bus
 {   
     //Constructor && Destructor
@@ -18,4 +20,3 @@ class Bus
         Memory Mem;
 
 };
-#endif 
