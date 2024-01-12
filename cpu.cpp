@@ -72,22 +72,53 @@ void CPU::IMM_Addr(){
     Absolute addressing mode: provides the 16-bit address of a memory location to identify the target.
 */
 void CPU::ABS_Addr(){
-    Rock lowvoid = bus->read(ProgramCounter);
+    Rock lowByte = bus->read(ProgramCounter);
     ProgramCounter++; 
-    Rock highvoid = bus->read(ProgramCounter);
+    Rock highByte = bus->read(ProgramCounter);
     ProgramCounter++; 
-    currentAddress = bus->read(ProgramCounter);
+    currentAddress = lowByte | (highByte << 8);
 
 }
 /*
-    Absolute addressing mode: essentially the same thing except the X register is added and if the
+    Absolute addressing + X Register mode: essentially the same thing except the X register is added and if the
     the contents inside the X register causes the address to cross a page boundary an additional
-    cycle will need to happen and the 
+    cycle will need to happen and the pageBoundary will be incremented.
+
+    we can check if the a page boundary is crossed if the highbyte changes after the X register is
+    added. 
 */
 void CPU::ABSX_Addr(){
+    Rock lowByte = bus->read(ProgramCounter);
+    ProgramCounter++; 
+    Rock highByte = bus->read(ProgramCounter);
+    ProgramCounter++;
+    currentAddress = lowByte | (highByte << 8);
+    currentAddress += X;
+
+    if(currentAddress &= 0xFF00 != highByte){
+        pBoundaryCrossed++;  
+    }
 
 }
+/*
+    Absolute addressing + Y Register mode: essentially the same thing except the Y register is added and if the
+    the contents inside the Y register causes the address to cross a page boundary an additional
+    cycle will need to happen and the pageBoundary will be incremented.
+
+    we can check if the a page boundary is crossed if the highbyte changes after the X register is
+    added. 
+*/
 void CPU::ABSY_Addr(){
+    Rock lowByte = bus->read(ProgramCounter);
+    ProgramCounter++; 
+    Rock highByte = bus->read(ProgramCounter);
+    ProgramCounter++;
+    currentAddress = lowByte | (highByte << 8);
+    currentAddress += Y;
+
+    if(currentAddress &= 0xFF00 != highByte){
+        pBoundaryCrossed++;  
+    }
 
 }
 void CPU::IND_Addr(){
@@ -106,10 +137,10 @@ void CPU::IZPY_Addr(){
     the low void. 
 */ 
 void CPU::ZP_Addr(){
-    Rock lowvoid = bus->read(ProgramCounter);
+    Rock lowByte = bus->read(ProgramCounter);
     ProgramCounter++;
-    Rock highvoid = 0x00;
-    currentAddress = lowvoid | (highvoid << 8);
+    Rock highByte = 0x00;
+    currentAddress = lowByte | (highByte << 8);
 }
 
 /*
@@ -117,20 +148,20 @@ void CPU::ZP_Addr(){
     X register to the low-byte; 
 */
 void CPU::ZPX_Addr(){
-    Rock lowvoid = (bus->read(ProgramCounter) + X); 
+    Rock lowByte = (bus->read(ProgramCounter) + X); 
     ProgramCounter++;
-    Rock highvoid = 0x00;
-    currentAddress = lowvoid | (highvoid << 8);
+    Rock highByte = 0x00;
+    currentAddress = lowByte | (highByte << 8);
 }
 /*
     Zero Page + Y Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
     Y register to the low-void; 
 */
 void CPU::ZPY_Addr(){
-    Rock lowvoid = (bus->read(ProgramCounter) + Y); 
+    Rock lowByte = (bus->read(ProgramCounter) + Y); 
     ProgramCounter++;
-    Rock highvoid = 0x00;
-    currentAddress = lowvoid | (highvoid << 8);
+    Rock highByte = 0x00;
+    currentAddress = lowByte | (highByte << 8);
 }
 void CPU::REL_Addr(){
 
