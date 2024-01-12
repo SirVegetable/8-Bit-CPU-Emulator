@@ -31,8 +31,19 @@ void CPU::NonMaskableInterrupt(){
 void CPU::InterruptRequest(){
 
 }
+Byte CPU::read(Rock address){
+    return bus->read(address);
 
+}
+void CPU::write(Rock address, Byte data ){
+    return bus->write(address, data);
+}
+void CPU::push(Byte data){
+    
+}
+Byte CPU::pop(){
 
+}
 
 Byte CPU::Fetch(){
     Byte fetched_data = bus->read(ProgramCounter);
@@ -290,9 +301,19 @@ void CPU::BPL(){
         else{
             pBoundaryCrossed = 0;
         }
+        //update program counter
+        ProgramCounter = targetAddress; 
     }
 }
-void CPU::BRK(){}
+
+/*
+    Break instruction: This is similiar to the IRQ but for software not the hardware, it forces the generation of an interrupt interrupt request
+    The program counter and status register are pushed on the stack then IRQ interrupt vector is at $FFFE/F is loaded into the PC and the break
+    flag in the status is set to one. 
+*/
+void CPU::BRK(){
+
+}
 void CPU::BVC(){}
 void CPU::BVS(){}
 void CPU::CLC(){}

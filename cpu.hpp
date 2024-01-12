@@ -1,9 +1,4 @@
-#ifndef CPU_HPP
-#define CPU_HPP
-#include <iostream> 
-#include <array> 
-#include "typedefs.h"
-#include "Memory.hpp"
+#pragma once 
 
 
 #define BIT_GRAB(SR,f)(((SR & f) > 0) ? 1 : 0);
@@ -24,28 +19,31 @@ public:
         OV = 1 << 6, // Overflow
         N = 1 << 7   // Negative
     };
-    //Bus member value which connects the bus to the cpu and allows for read and write
-    Bus *bus; 
-
-    //Acumulator, X and Y Registers
-    Byte Accum,X,Y = 0x00;
-    //Stack Pointer
-    Byte StackPointer= 0x00; 
-    //Program Counter
-    Rock ProgramCounter= 0x0000;
-    //Status Register for the flags
-    Byte StatusRegister = 0x00; 
-
-    // Connecting CPU to the bus
-    void busConnection(Bus *b);
     
-    //functions that handle 6502 interrupts
+    Bus *bus; //pointer to the bus which connects the bus to the cpu and allows for read and write
+
+
+    Byte Accum,X,Y = 0x00; //Acumulator, X and Y Registers
+    Byte StackPointer= 0x00;      //Stack Pointer
+    Rock ProgramCounter= 0x0000; //Program Counter
+    Byte StatusRegister = 0x00; //Status Register 
+
+    void busConnection(Bus *b); // Connecting CPU to the bus
+    
+
     void Reset();
     void NonMaskableInterrupt();
     void InterruptRequest(); 
     
     // Fetch is used for instructions 
     Byte Fetch();
+
+    Byte read(Rock Addr);             //CPU read function 
+    void write(Rock addr, Byte data); //CPU write function
+    
+    void push(Byte data); // CPU pushes to stack 
+    Byte pop();           // CPU pops to stack 
+
     
     //function that executes the instructions
     void Execute();
@@ -112,4 +110,3 @@ private:
 
 }; 
 
-#endif 
