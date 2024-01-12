@@ -374,8 +374,13 @@ void CPU::BVS(){
     }
 
 }
-
-void CPU::CLC(){}
+/*
+    Clear Carry Flag: set the carry flag to 0.
+*/
+void CPU::CLC(){
+    BIT_SET(StatusRegister,C, false);
+    pBoundaryCrossed = 0; 
+}
 void CPU::CLD(){}
 void CPU::CLI(){}
 void CPU::CLV(){}
