@@ -39,10 +39,14 @@ void CPU::write(Rock address, Byte data ){
     return bus->write(address, data);
 }
 void CPU::push(Byte data){
+    bus->write(0x0100 + StackPointer, data);
+    StackPointer--; 
 
 }
 Byte CPU::pop(){
-
+    Byte data = bus->read(0x0100 + StackPointer);
+    StackPointer++; 
+    return data; 
 }
 
 Byte CPU::fetch(){
