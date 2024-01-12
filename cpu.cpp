@@ -277,7 +277,8 @@ void CPU::BNE(){
     bool nFlagCheck = BIT_GRAB(StatusRegister,N);
     if(nFlagCheck){
         Rock newPC = ProgramCounter + relativeDisplacement;
-        targetAddress = newPC; 
+        targetAddress = newPC;
+        cycles++; 
         
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
             pBoundaryCrossed = 1; 
@@ -297,6 +298,7 @@ void CPU::BPL(){
     if(!nFlagCheck){
         Rock newPC = ProgramCounter + relativeDisplacement; 
         targetAddress = newPC;
+        cycles++; 
         
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
             pBoundaryCrossed = 1; 
@@ -329,19 +331,38 @@ void CPU::BRK(){
 
 }
 /*
-    Branch if 
+    Branch if Overflow Clear instruction: If the overflow flag is clear then add the relative displacement to the program counter to cause a branch to
+    a new location. If branch is successful cycles is incremented and check if page boundary is crossed.
 
 */
-void CPU::BVC(){}
+void CPU::BVC(){
+    bool overflowFlag = BIT_GRAB(StatusRegister,OV);
+    if(!overflowFlag){
+        Rock newPC = ProgramCounter + relativeDisplacement;
+        targetAddress = newPC; 
+        cycles++;
+
+        if((targetAddress &= 0xFF00) != (ProgramCounter &= 0xFF00)){
+            pBoundaryCrossed = 1; 
+        }
+        else{
+            pBoundaryCrossed = 0; 
+        }
+        ProgramCounter = targetAddress;
+        
+    }
+
+}
 /*
-    Branch If Overflow Clear instruction: if the Overflow flag is set then add the relative displacement to the program counter and branch to new
-    location.
+    Branch If Overflow Set instruction: if the Overflow flag is set then add the relative displacement to the program counter and branch to new
+    location. If branch succeeds cycles is incremeneted and check if page boundary is crossed then we store that for cycle increments later.
 */
 void CPU::BVS(){
     bool overflowFlag = BIT_GRAB(StatusRegister,OV);
     if(overflowFlag){
         Rock newPC = ProgramCounter + relativeDisplacement; 
         targetAddress = newPC;
+        cycles++; 
         
         if((targetAddress &= 0xFF00) != (ProgramCounter &= 0xFF00)){
             pBoundaryCrossed = 1; 
