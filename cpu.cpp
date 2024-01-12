@@ -117,7 +117,10 @@ void CPU::ABSY_Addr(){
     targetAddress += Y;
 
     if(targetAddress &= 0xFF00 != highByte){
-          
+          pBoundaryCrossed = 1; 
+    }
+    else{
+        pBoundaryCrossed  = 0; 
     }
 
 }
@@ -205,6 +208,7 @@ void CPU::AND(){
     Accum = Accum & fetchedData;
     BIT_SET(StatusRegister,Z,(Accum == 0x00));
     BIT_SET(StatusRegister,N,(Accum & 0x80));
+    pBoundaryCrossed = 1; 
 }
 
 // Arithmethic Shift Left
@@ -232,7 +236,7 @@ void CPU::BIT(){
 } 
 /*
     Branch If Minus instruction: if the negative flag is set then add the relative displacemenet to the program counter to cause a branch to
-    the new location. This instruction increments cycles if branch succeeeds and +1 more cycle if its to a new page. 
+    the new location. This instruction increments cycles if branch succeeeds and sets page boundary crossed if its true.  
 */  
 void CPU::BMI(){
     bool nFlagCheck = BIT_GRAB(StatusRegister, N);
@@ -244,13 +248,16 @@ void CPU::BMI(){
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
             pBoundaryCrossed = 1; 
         }
+        else{
+            pBoundaryCrossed = 0; 
+        }
         //set program counter to the new TargetAddress
         ProgramCounter = targetAddress; 
     }
 }
 /*
-    Branch If Not Equal: if the Zero flag is clear then add the relative displacement to program counter to cause a branch to a new location.
-    This instruction will increment by one cycles and by an additional cycle if a page boundary is crossed
+    Branch If Not Equal instruction: if the Zero flag is clear then add the relative displacement to program counter to cause a branch to a new 
+    location. This instruction will increment by one cycles and set page boundary crossed to 1 if its true.
 */
 void CPU::BNE(){
     bool nFlagCheck = BIT_GRAB(StatusRegister,N);
@@ -261,10 +268,30 @@ void CPU::BNE(){
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
             pBoundaryCrossed = 1; 
         }
+        else{
+            pBoundaryCrossed = 0; 
+        }
         ProgramCounter = targetAddress; 
     }
 }
-void CPU::BPL(){}
+/*
+    Branch If Positive instruction: if the Zero flag is clear then add the relative displacement to the program location to branch to a new
+    location. Add a cycle if branch succeeds and set page boundary crossed if its true. 
+*/
+void CPU::BPL(){
+    bool nFlagCheck = BIT_GRAB(StatusRegister,N);
+    if(!nFlagCheck){
+        Rock newPC = ProgramCounter + relativeDisplacement; 
+        targetAddress = newPC;
+        // check page boundary by checking if the highByte changes
+        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
+            pBoundaryCrossed = 1; 
+        }
+        else{
+            pBoundaryCrossed = 0;
+        }
+    }
+}
 void CPU::BRK(){}
 void CPU::BVC(){}
 void CPU::BVS(){}

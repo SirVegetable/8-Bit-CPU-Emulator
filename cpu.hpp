@@ -81,7 +81,7 @@ private:
     // take a relative displacement used to add to the program counter. 
     Rock relativeDisplacement = 0x0000; 
     // Variable to check if the instruction crosses a page boundary
-    Byte pBoundaryCrossed = 0x00;
+    bool pBoundaryCrossed = 0;
 
 
      
