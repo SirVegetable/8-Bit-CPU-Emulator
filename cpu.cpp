@@ -198,7 +198,8 @@ void CPU::AND(){
     fetchedData = Fetch();
 
     Accum = Accum & fetchedData;
-    BIT_SET(StackPointer,Z,(Accum == 0x00))
+    BIT_SET(StatusRegister,Z,(Accum == 0x00));
+    BIT_SET(StatusRegister,N,(Accum & 0x80));
 }
 
 // Arithmethic Shift Left
@@ -210,7 +211,12 @@ void CPU::BCC(){}
 void CPU::BCS(){}
 
 void CPU::BEQ(){}
-void CPU::BIT(){}
+
+void CPU::BIT(){
+    fetchedData = Fetch();
+    Byte throwAway = Accum & fetchedData; 
+    BIT_SET(StatusRegister,);
+}
 void CPU::BMI(){}
 void CPU::BNE(){}
 void CPU::BPL(){}
