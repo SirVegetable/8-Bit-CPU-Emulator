@@ -378,11 +378,24 @@ void CPU::BVS(){
     Clear Carry Flag: set the carry flag to 0.
 */
 void CPU::CLC(){
-    BIT_SET(StatusRegister,C, false);
+    BIT_SET(StatusRegister,C, 0);
     pBoundaryCrossed = 0; 
 }
-void CPU::CLD(){}
-void CPU::CLI(){}
+/*
+    Clear Deceimal flag: set decimal flag to 0; 
+*/
+void CPU::CLD(){
+    BIT_SET(StatusRegister,D,0);
+    pBoundaryCrossed = 0; 
+}
+/*
+    Clear Interrupt Disable: set interrupt disable to 0; 
+*/
+void CPU::CLI(){
+    BIT_SET(StatusRegister,ID,0);
+    pBoundaryCrossed = 0; 
+}
+
 void CPU::CLV(){}
 void CPU::CMP(){}
 void CPU::CPX(){}
