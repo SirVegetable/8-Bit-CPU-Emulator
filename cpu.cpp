@@ -61,7 +61,6 @@ void CPU::execute(){
         Byte opcode = fetch();
         
 
-
     }
 }
 
@@ -305,20 +304,33 @@ void CPU::BPL(){
         else{
             pBoundaryCrossed = 0;
         }
-        //update program counter
         ProgramCounter = targetAddress; 
     }
 }
 
 /*
-    Break instruction: This is similiar to the IRQ but for software not the hardware, it forces the generation of an interrupt interrupt request
-    The program counter and status register are pushed on the stack then IRQ interrupt vector is at $FFFE/F is loaded into the PC and the break
-    flag in the status is set to one. 
+    Break instruction: This is similiar to the IRQ but for software not the hardware, it forces the generation of an interrupt request.The program 
+    counter and status register are pushed on the stack then IRQ interrupt vector is at $FFFE/F is loaded into the PC and the break
+    flag in the status is set to one and ID flag is set to 0; 
+    Note: Program counter is incremented by 2 so it points to the second byte after the opcode
 */
 void CPU::BRK(){
+    ProgramCounter += 2;
+
+    BIT_SET(StatusRegister,ID,1);
+    push((ProgramCounter &= 0xFF00));
+    push((ProgramCounter &= 0xFF00));
+    
+    BIT_SET(StatusRegister,B,1);
+    push(StatusRegister);
+
+    BIT_SET(StatusRegister,B,0);
+    ProgramCounter = static_cast<Rock>((read(0xFFFE) | read(0xFFFF)));
 
 }
-void CPU::BVC(){}
+void CPU::BVC(){
+    
+}
 void CPU::BVS(){}
 void CPU::CLC(){}
 void CPU::CLD(){}
