@@ -522,9 +522,41 @@ void CPU::INY(){
     BIT_SET(StatusRegister, N , (Y & (1 << 6) != 0));
     pPBC = 0; 
 }
-void CPU::JMP(){}
-void CPU::JSR(){}
-void CPU::LDX(){}
+/*
+    Jump Instruction: sets the program counter to the address specified by the operand.
+
+*/
+void CPU::JMP(){
+    ProgramCounter = targetAddress; 
+    pPBC = 0 ; 
+}
+/*
+    Jump To Subroutine instruction: pushes the address(minus one) of the return point on to the stack and then sets the program
+    counter to the target memory address
+*/
+void CPU::JSR(){
+    ProgramCounter--; 
+}
+/*
+    Load Accumulator instruction: Loads a byte of memory into the accumulator setting the zero and negative flags as appropriate. 
+    Set zero flag if A = 0, set negative Flag if bit 7 of A is set. Potential page boundary crossed. 
+*/
+void CPU::LDA(){
+    Accum = fetch();
+    BIT_SET(StatusRegister, Z , (Accum == 0x00));
+    BIT_SET(StatusRegister, N , (Accum & (1 << 6) != 0));
+    pPBC = 1; 
+}
+/*
+    Load X Register instruction: Loads a byte of memory into the X register setting the zero and negative flags as appropriate. 
+    Set zero flag if X = 0, set negative Flag if bit 7 of X is set. Potential page boundary crossed. 
+*/
+void CPU::LDX(){
+    X = fetch(); 
+    BIT_SET(StatusRegister, Z ,(X == 0));
+    BIT_SET(StatusRegister, N, (X & (1 << 6) != 0 ));
+    pPBC = 1; 
+}
 void CPU::LDY(){}
 void CPU::LSR(){}
 void CPU::NOP(){}
