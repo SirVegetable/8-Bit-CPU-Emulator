@@ -621,7 +621,16 @@ void CPU::SEI(){
     BIT_SET(StatusRegister, ID , 1);
     pPBC = 0; 
 }
-void CPU::STA(){}
+/*
+    Store The Accumulator instruction: stores the contents of the accumulator in memory. 
+*/
+void CPU::STA(){
+    write(targetAddress, Accum);
+    pPBC = 0; 
+}
+/*
+    Store The X register instruction: 
+*/
 void CPU::STX(){}
 void CPU::STY(){}
 void CPU::TAX(){}
