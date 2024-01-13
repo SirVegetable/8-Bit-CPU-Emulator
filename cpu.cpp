@@ -643,7 +643,17 @@ void CPU::STY(){
     write(targetAddress, Y);
     pPBC = 0; 
 }
-void CPU::TAX(){}
+/*
+    Transfer the Accumulator to X instruction: Copies the current contents of the accumulator into 
+    the X register and sets the zero and negative flags as appropriate. Set Z if X = 0 and set N 
+    if bit 7 of the X register is set. 
+*/
+void CPU::TAX(){
+    X = Accum;
+    BIT_SET(StatusRegister, Z , (X = 0x00));
+    BIT_SET(StatusRegister, N, (Accum & (1 << 6) != 0));
+    pPBC = 0; 
+}
 void CPU::TAY(){}
 void CPU::TXS(){}
 void CPU::TXA(){}
