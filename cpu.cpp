@@ -607,7 +607,13 @@ void CPU::SEC(){
     BIT_SET(StatusRegister, C , 1);
     pPBC = 0; 
 }
-void CPU::SED(){}
+/*
+    Set Decimal Flag instruction: set the cdecimal flag to one
+*/
+void CPU::SED(){
+    BIT_SET(StatusRegister, D , 1);
+    pPBC = 0; 
+}
 void CPU::SEI(){}
 void CPU::STA(){}
 void CPU::STX(){}
