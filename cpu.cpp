@@ -601,20 +601,26 @@ void CPU::RTI(){}
 void CPU::RTS(){}
 void CPU::SBC(){}
 /*
-    Set Carry Flag instruction: set the carry flag to one
+    Set Carry Flag instruction: set the carry flag 
 */
 void CPU::SEC(){
     BIT_SET(StatusRegister, C , 1);
     pPBC = 0; 
 }
 /*
-    Set Decimal Flag instruction: set the cdecimal flag to one
+    Set Decimal Flag instruction: set the cdecimal flag 
 */
 void CPU::SED(){
     BIT_SET(StatusRegister, D , 1);
     pPBC = 0; 
 }
-void CPU::SEI(){}
+/*
+    Set Interrupt Disable Flag instruction: set the interrupt disable flag
+*/
+void CPU::SEI(){
+    BIT_SET(StatusRegister, ID , 1);
+    pPBC = 0; 
+}
 void CPU::STA(){}
 void CPU::STX(){}
 void CPU::STY(){}
