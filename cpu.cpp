@@ -651,10 +651,20 @@ void CPU::STY(){
 void CPU::TAX(){
     X = Accum;
     BIT_SET(StatusRegister, Z , (X = 0x00));
-    BIT_SET(StatusRegister, N, (Accum & (1 << 6) != 0));
+    BIT_SET(StatusRegister, N , (X & (1 << 6) != 0));
     pPBC = 0; 
 }
-void CPU::TAY(){}
+/*
+    Transfer the Accumulator to Y instruction: Copies the current contents of the accumulator into 
+    the Y register and sets the zero and negative flags as appropriate. Set Z if Y = 0 and set N 
+    if bit 7 of the Y register is set. 
+*/
+void CPU::TAY(){
+    Y = Accum; 
+    BIT_SET(StatusRegister, Z , (Y == 0x00));
+    BIT_SET(StatusRegister, Y , (Y & (1 << 6) != 0));
+    pPBC = 0; 
+}
 void CPU::TXS(){}
 void CPU::TXA(){}
 void CPU::TXS(){}
