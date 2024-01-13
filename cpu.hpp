@@ -62,7 +62,7 @@ private:
     Byte fetchedData = 0x00;              // holds the data that has been fetched 
     Rock targetAddress = 0x0000;          // holds the current target address  
     Rock relativeDisplacement = 0x0000;   // relative displacement used to add to the program counter when branching occurs 
-    bool pBoundaryCrossed = 0;            // Variable to check if the instruction crosses a page boundary
+    bool pPBC = 0;                        // possible page boundary crossed, will be set to 1 if its possible and 0 if not 
 
 
      

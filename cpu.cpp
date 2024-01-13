@@ -131,10 +131,10 @@ void CPU::ABSY_Addr(){
     targetAddress += Y;
 
     if(targetAddress &= 0xFF00 != highByte){
-          pBoundaryCrossed = 1; 
+          pPBC = 1; 
     }
     else{
-        pBoundaryCrossed  = 0; 
+        pPBC  = 0; 
     }
 
 }
@@ -153,7 +153,7 @@ void CPU::ABSY_Addr(){
 */
 void CPU::IND_Addr(){
     Rock pointerAddress = read(ProgramCounter++);
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
     
 }
 void CPU::IZPX_Addr(){
@@ -173,7 +173,7 @@ void CPU::ZP_Addr(){
     ProgramCounter++;
     Rock highByte = 0x00;
     targetAddress = lowByte | (highByte << 8);
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
 }
 
 /*
@@ -185,7 +185,7 @@ void CPU::ZPX_Addr(){
     ProgramCounter++;
     Rock highByte = 0x00;
     targetAddress = lowByte | (highByte << 8);
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
 }
 /*
     Zero Page + Y Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
@@ -196,7 +196,7 @@ void CPU::ZPY_Addr(){
     ProgramCounter++;
     Rock highByte = 0x00;
     targetAddress = lowByte | (highByte << 8);
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
 }
 
 void CPU::REL_Addr(){
@@ -222,7 +222,7 @@ void CPU::AND(){
     Accum = Accum & fetchedData;
     BIT_SET(StatusRegister,Z,(Accum == 0x00));
     BIT_SET(StatusRegister,N,(Accum & 0x80));
-    pBoundaryCrossed = 1; 
+    pPBC = 1; 
 }
 
 // Arithmethic Shift Left
@@ -246,7 +246,7 @@ void CPU::BIT(){
     BIT_SET(StatusRegister, N, (fetchedData & (1<<7)));
     BIT_SET(StatusRegister,OV,(fetchedData & (1 << 6)));
 
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
 } 
 /*
     Branch If Minus instruction: if the negative flag is set then add the relative displacemenet to the program counter to cause a branch to
@@ -260,10 +260,10 @@ void CPU::BMI(){
         cycles++;
         
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
-            pBoundaryCrossed = 1; 
+            pPBC = 1; 
         }
         else{
-            pBoundaryCrossed = 0; 
+            pPBC = 0; 
         }
         //set program counter to the new TargetAddress
         ProgramCounter = targetAddress; 
@@ -281,10 +281,10 @@ void CPU::BNE(){
         cycles++; 
         
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
-            pBoundaryCrossed = 1; 
+            pPBC = 1; 
         }
         else{
-            pBoundaryCrossed = 0; 
+            pPBC = 0; 
         }
         ProgramCounter = targetAddress; 
     }
@@ -301,10 +301,10 @@ void CPU::BPL(){
         cycles++; 
         
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
-            pBoundaryCrossed = 1; 
+            pPBC = 1; 
         }
         else{
-            pBoundaryCrossed = 0;
+            pPBC = 0;
         }
         ProgramCounter = targetAddress; 
     }
@@ -328,6 +328,7 @@ void CPU::BRK(){
 
     BIT_SET(StatusRegister,B,0);
     ProgramCounter = static_cast<Rock>((read(0xFFFE) | read(0xFFFF)));
+    pPBC = 0; 
 
 }
 /*
@@ -343,10 +344,10 @@ void CPU::BVC(){
         cycles++;
 
         if((targetAddress &= 0xFF00) != (ProgramCounter &= 0xFF00)){
-            pBoundaryCrossed = 1; 
+            pPBC = 1; 
         }
         else{
-            pBoundaryCrossed = 0; 
+            pPBC = 0; 
         }
         ProgramCounter = targetAddress;
         
@@ -365,10 +366,10 @@ void CPU::BVS(){
         cycles++; 
         
         if((targetAddress &= 0xFF00) != (ProgramCounter &= 0xFF00)){
-            pBoundaryCrossed = 1; 
+            pPBC = 1; 
         }
         else{
-            pBoundaryCrossed = 0; 
+            pPBC = 0; 
         }
         ProgramCounter = targetAddress;
     }
@@ -379,34 +380,44 @@ void CPU::BVS(){
 */
 void CPU::CLC(){
     BIT_SET(StatusRegister,C, 0);
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
 }
 /*
     Clear Decimal flag instruction: set decimal flag to 0; 
 */
 void CPU::CLD(){
     BIT_SET(StatusRegister,D,0);
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
 }
 /*
     Clear Interrupt Disable flag instruction : set interrupt disable to 0; 
 */
 void CPU::CLI(){
     BIT_SET(StatusRegister,ID,0);
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
 }
 /*
     Clear Overflow flag instruction: set overflow flag to 0; 
 */
 void CPU::CLV(){
     BIT_SET(StatusRegister,OV, 0);
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
 }
 /*
     Compare instruction: this comapres the contents of the accumulator with another memory held vale and set the zero and carry flags.
-    set carry if A >= M, set Zero flag if A = M, set if bit 7 of the result is set. 
+    set carry if A >= M, set Zero flag if A = M, set Negative flag if bit 7 of the result is set. 
 */
-void CPU::CMP(){}
+void CPU::CMP(){
+    fetchedData = fetch(); 
+    Rock compare = static_cast<Rock>(Accum - fetchedData);
+    BIT_SET(StatusRegister,C,(Accum >= fetchedData));
+    BIT_SET(StatusRegister,Z,(compare &= 0x00FF) == 0x0000);
+    BIT_SET(StatusRegister,N, (compare & (1 << 6) != 0));
+
+    pPBC = 1; 
+
+}
+
 void CPU::CPX(){}
 void CPU::CPY(){}
 void CPU::DEC(){}
@@ -446,5 +457,5 @@ void CPU::TXS(){}
 void CPU::TYA(){}
 
 void CPU::Illegal_opcode(){
-    pBoundaryCrossed = 0; 
+    pPBC = 0; 
 }
