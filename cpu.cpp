@@ -51,7 +51,6 @@ Byte CPU::pop(){
 
 Byte CPU::fetch(){
     Byte fetched_data = read(ProgramCounter);
-    ProgramCounter++;
     return fetched_data; 
 }
 void CPU::execute(){
@@ -443,9 +442,19 @@ void CPU::CPY(){
     
 }
 /*
-
+    Decrement Memory instruction: this subtracts 1 from the value at the specified memory address setting the zero and negative flags. The zero flag is 
+    set if the result is zero, and the negative flag is set if the 7th bit is set. 
 */
-void CPU::DEC(){}
+void CPU::DEC(){
+    fetchedData = fetch();
+    Byte decremented = fetchedData - 1;
+    write(targetAddress,decremented);
+    BIT_SET(StatusRegister, Z , (decremented == 0x00));
+    BIT_SET(StatusRegister, N, (decremented & (1 << 6) != 0));
+    pPBC = 0; 
+
+}
+
 void CPU::DEX(){}
 void CPU::DEY(){}
 void CPU::EOR(){}
