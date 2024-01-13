@@ -600,7 +600,13 @@ void CPU::ROR(){}
 void CPU::RTI(){}
 void CPU::RTS(){}
 void CPU::SBC(){}
-void CPU::SEC(){}
+/*
+    Set Carry Flag instruction: set the carry flag to one
+*/
+void CPU::SEC(){
+    BIT_SET(StatusRegister, C , 1);
+    pPBC = 0; 
+}
 void CPU::SED(){}
 void CPU::SEI(){}
 void CPU::STA(){}
