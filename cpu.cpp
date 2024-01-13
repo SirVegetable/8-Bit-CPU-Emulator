@@ -488,8 +488,20 @@ void CPU::EOR(){
     BIT_SET(StatusRegister, N , ( Accum & (1 << 6) != 0));
     pPBC = 1; 
 }
+/*
+    Increment Memory instruction: adds one to the value held at a specified memory location setting the zero and negative flags appropriately. Zero flag
+    set if the result is 0, set negative flag if bit 7 of the result is set. 
+*/
 
-void CPU::INC(){}
+void CPU::INC(){
+    fetchedData = fetch(); 
+    Byte incremented = fetchedData + 1;
+    write(targetAddress, incremented);
+    BIT_SET(StatusRegister, Z , (incremented == 0x00));
+    BIT_SET(StatusRegister, N , (incremented &(1 << 6) != 0));
+    pPBC = 0; 
+
+}
 void CPU::INX(){}
 void CPU::INY(){}
 void CPU::JMP(){}
