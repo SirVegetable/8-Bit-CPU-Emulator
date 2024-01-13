@@ -71,6 +71,7 @@ void CPU::execute(){
 */
 void CPU::IMP_Addr(){
     fetchedData = Accum;
+    pPBC = 0; 
     
 }
 /*
@@ -79,6 +80,7 @@ void CPU::IMP_Addr(){
 */ 
 void CPU::IMM_Addr(){
     targetAddress = ProgramCounter++; 
+    pPBC = 0; 
 
 }
 /*
@@ -109,7 +111,10 @@ void CPU::ABSX_Addr(){
     targetAddress += X;
 
     if(targetAddress &= 0xFF00 != highByte){
-          
+          pPBC = 1; 
+    }
+    else{
+        pPBC = 0; 
     }
 
 }
@@ -679,9 +684,9 @@ void CPU::TXS(){
 
 }
 /*
-    Transfer the Accumulator to Y instruction: Copies the current contents of the accumulator into 
-    the Y register and sets the zero and negative flags as appropriate. Set Z if Y = 0 and set N 
-    if bit 7 of the Y register is set. 
+    Transfer the X register into the Accumulator instruction: Copies the current contents of the X register into 
+    the accumulator and sets the zero and negative flags as appropriate. Set Z if Y = 0 and set N 
+    if bit 7 of the accumulator is set. 
 */
 void CPU::TXA(){
     Accum = X;
@@ -690,9 +695,8 @@ void CPU::TXA(){
     pPBC = 0; 
 }
 /*
-    Transfer the Accumulator to Y instruction: Copies the current contents of the accumulator into 
-    the Y register and sets the zero and negative flags as appropriate. Set Z if Y = 0 and set N 
-    if bit 7 of the Y register is set. 
+    Transfer the X Register to Stack Pointer instruction: Copies the current contents of the X register into 
+    the StackPointer.
 */
 void CPU::TXS(){
     StackPointer = X;
