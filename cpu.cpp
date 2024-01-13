@@ -557,7 +557,16 @@ void CPU::LDX(){
     BIT_SET(StatusRegister, N, (X & (1 << 6) != 0 ));
     pPBC = 1; 
 }
-void CPU::LDY(){}
+/*
+    Load Y Register instruction: Loads a byte of memory into the Y register setting the zero and negative flags as appropriate. 
+    Set zero flag if Y = 0, set negative Flag if bit 7 of Y is set. Potential page boundary crossed. 
+*/
+void CPU::LDY(){
+    Y = fetch();
+    BIT_SET(StatusRegister, Z, (Y == 0));
+    BIT_SET(StatusRegister, N , (Y & (1 << 6) != 0));
+    pPBC = 1; 
+}
 void CPU::LSR(){}
 void CPU::NOP(){}
 void CPU::ORA(){}
