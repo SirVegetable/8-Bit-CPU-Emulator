@@ -629,10 +629,20 @@ void CPU::STA(){
     pPBC = 0; 
 }
 /*
-    Store The X register instruction: 
+    Store The X register instruction: stores the contents of the X register in memory
 */
-void CPU::STX(){}
-void CPU::STY(){}
+void CPU::STX(){
+    write(targetAddress, X);
+    pPBC = 0; 
+
+}
+/*
+    Store The Y register instruction: stores the contents of the Y register in memory
+*/
+void CPU::STY(){
+    write(targetAddress, Y);
+    pPBC = 0; 
+}
 void CPU::TAX(){}
 void CPU::TAY(){}
 void CPU::TXS(){}
