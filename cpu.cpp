@@ -454,6 +454,7 @@ void CPU::DEC(){
     pPBC = 0; 
 
 }
+
 /*
     Decrement X Register instruction: subtracts one from the X register setting the zero and negative flags if X is zero and if the 7th bit is set
     respectively. 
@@ -464,8 +465,30 @@ void CPU::DEX(){
     BIT_SET(StatusRegister, N, (X & (1 << 6) != 0));
     pPBC = 0; 
 }
-void CPU::DEY(){}
-void CPU::EOR(){}
+
+/*
+    Decrement Y Register instruction: subtracts one from the Y register setting the zero and negative flags if X is zero and if the 7th bit is set
+    respectively. 
+*/
+void CPU::DEY(){
+    Y--;
+    BIT_SET(StatusRegister, Z , (Y == 0x00));
+    BIT_SET(StatusRegister, N , (Y & (1 << 6) != 0));
+    pPBC = 0; 
+}
+/*
+    Exclusive OR function instruction: an XOR is performed bit by bit on the accumulator contents using the contents of a byte of memory. Setting the
+    zero flag if A = 0, setting negative flag if the 7th bit is set; possibility of a possible page boundary being crossed. 
+*/
+
+void CPU::EOR(){
+    fetchedData = fetch();
+    Accum = Accum ^ fetchedData; 
+    BIT_SET(StatusRegister, Z , (Accum == 0x00));
+    BIT_SET(StatusRegister, N , ( Accum & (1 << 6) != 0));
+    pPBC = 1; 
+}
+
 void CPU::INC(){}
 void CPU::INX(){}
 void CPU::INY(){}
