@@ -450,12 +450,20 @@ void CPU::DEC(){
     Byte decremented = fetchedData - 1;
     write(targetAddress,decremented);
     BIT_SET(StatusRegister, Z , (decremented == 0x00));
-    BIT_SET(StatusRegister, N, (decremented & (1 << 6) != 0));
+    BIT_SET(StatusRegister, N , (decremented & (1 << 6) != 0));
     pPBC = 0; 
 
 }
-
-void CPU::DEX(){}
+/*
+    Decrement X Register instruction: subtracts one from the X register setting the zero and negative flags if X is zero and if the 7th bit is set
+    respectively. 
+*/
+void CPU::DEX(){
+    X--;
+    BIT_SET(StatusRegister, Z , (X == 0x00));
+    BIT_SET(StatusRegister, N, (X & (1 << 6) != 0));
+    pPBC = 0; 
+}
 void CPU::DEY(){}
 void CPU::EOR(){}
 void CPU::INC(){}
