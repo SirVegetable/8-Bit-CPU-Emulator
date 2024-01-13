@@ -502,8 +502,26 @@ void CPU::INC(){
     pPBC = 0; 
 
 }
-void CPU::INX(){}
-void CPU::INY(){}
+/*
+    Increment X instruction: adds one to the value X register setting the zero and negative flags appropriately. Zero flag
+    set if X = 0, set negative flag if bit 7 of the X is set. 
+*/
+void CPU::INX(){
+    X++;
+    BIT_SET(StatusRegister, Z , (X == 0x00));
+    BIT_SET(StatusRegister, N , (X & (1 << 6) != 0));
+    pPBC = 0; 
+}
+/*
+    Increment Y instruction: adds one to the value Y register setting the zero and negative flags appropriately. Zero flag
+    set if Y = 0, set negative flag if bit 7 of the Y is set. 
+*/
+void CPU::INY(){
+    Y++;
+    BIT_SET(StatusRegister, Z , (Y == 0x00));
+    BIT_SET(StatusRegister, N , (Y & (1 << 6) != 0));
+    pPBC = 0; 
+}
 void CPU::JMP(){}
 void CPU::JSR(){}
 void CPU::LDX(){}
