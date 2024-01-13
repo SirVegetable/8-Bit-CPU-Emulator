@@ -567,9 +567,30 @@ void CPU::LDY(){
     BIT_SET(StatusRegister, N , (Y & (1 << 6) != 0));
     pPBC = 1; 
 }
-void CPU::LSR(){}
+/* 
+    Logical Shift Right instruction: Each of the bits in Accumulator or said memory byte is shifted one the right. The bit that in the
+    bit 0 is shifted into the carry flag. Bit 7 is set to zero. C flag set to conetents of old bit 0, set Z if result = 0, set N if bit
+    7 of the result is set. If the addressing mode is implied then Accumulator is shifted otherwise memory byte is shifted. 
+*/
+
+void CPU::LSR(){
+    
+}
 void CPU::NOP(){}
-void CPU::ORA(){}
+/*
+    Logical Inclusive OR instruction: an inclusive OR is performed bit by bit on the accumulator using the contents of a byte of memory
+    the zero flag is set if A = 0, N flag set if bit 7 is set. Possibility of page boundary crossed. 
+
+*/
+void CPU::ORA(){
+    fetchedData = fetch();
+    Accum = Accum | fetchedData;
+    BIT_SET(StatusRegister, Z , (Accum == 0x00));
+    BIT_SET(StatusRegister, N , (Accum & (1 << 6) != 0));
+
+    pPBC = 0; 
+
+}
 void CPU::PHA(){}
 void CPU::PHP(){}
 void CPU::PLA(){}
