@@ -410,15 +410,25 @@ void CPU::CLV(){
 void CPU::CMP(){
     fetchedData = fetch(); 
     Rock compare = static_cast<Rock>(Accum - fetchedData);
-    BIT_SET(StatusRegister,C,(Accum >= fetchedData));
-    BIT_SET(StatusRegister,Z,(compare &= 0x00FF) == 0x0000);
-    BIT_SET(StatusRegister,N, (compare & (1 << 6) != 0));
+    BIT_SET(StatusRegister, C , (Accum >= fetchedData));
+    BIT_SET(StatusRegister, Z , (compare &= 0x00FF) == 0x0000);
+    BIT_SET(StatusRegister, N , (compare & (1 << 6) != 0));
 
     pPBC = 1; 
 
 }
-
-void CPU::CPX(){}
+/*
+    Compare X Register instruction: this comapres contents of X register with another memory held value and sets the zero and carry flags as appropriate.
+    set carry if X >= M, set zero if X = M, set N if bit 7 of the result is set. 
+*/
+void CPU::CPX(){
+    fetchedData = fetch(); 
+    Rock compare = static_cast<Rock>(X - fetchedData);
+    BIT_SET(StatusRegister, C, (X >= fetchedData));
+    BIT_SET(StatusRegister, Z,(compare &= 0x00FF == 0x0000));
+    BIT_SET(StatusRegister, N , (compare & (1 << 6) != 0));
+    pPBC = 0; 
+}
 void CPU::CPY(){}
 void CPU::DEC(){}
 void CPU::DEX(){}
