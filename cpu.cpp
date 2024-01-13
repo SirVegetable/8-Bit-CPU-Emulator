@@ -689,7 +689,17 @@ void CPU::TXA(){
     BIT_SET(StatusRegister, N , (Accum & (1 << 6) != 0 ));
     pPBC = 0; 
 }
-void CPU::TXS(){}
+/*
+    Transfer the Accumulator to Y instruction: Copies the current contents of the accumulator into 
+    the Y register and sets the zero and negative flags as appropriate. Set Z if Y = 0 and set N 
+    if bit 7 of the Y register is set. 
+*/
+void CPU::TXS(){
+    StackPointer = X;
+    BIT_SET(StatusRegister, Z , (StackPointer == 0x00));
+    BIT_SET(StatusRegister, N , (StackPointer & (1 << 6) != 0 ));
+    pPBC = 0; 
+}
 void CPU::TYA(){}
 
 void CPU::Illegal_opcode(){
