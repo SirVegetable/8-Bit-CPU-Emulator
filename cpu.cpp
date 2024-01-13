@@ -404,7 +404,7 @@ void CPU::CLV(){
     pPBC = 0; 
 }
 /*
-    Compare instruction: this comapres the contents of the accumulator with another memory held vale and set the zero and carry flags.
+    Compare instruction: this compares the contents of the accumulator with another memory held vale and set the zero and carry flags.
     set carry if A >= M, set Zero flag if A = M, set Negative flag if bit 7 of the result is set. 
 */
 void CPU::CMP(){
@@ -418,18 +418,33 @@ void CPU::CMP(){
 
 }
 /*
-    Compare X Register instruction: this comapres contents of X register with another memory held value and sets the zero and carry flags as appropriate.
+    Compare X Register instruction: this compares contents of X register with another memory held value and sets the zero and carry flags as appropriate.
     set carry if X >= M, set zero if X = M, set N if bit 7 of the result is set. 
 */
 void CPU::CPX(){
     fetchedData = fetch(); 
     Rock compare = static_cast<Rock>(X - fetchedData);
-    BIT_SET(StatusRegister, C, (X >= fetchedData));
-    BIT_SET(StatusRegister, Z,(compare &= 0x00FF == 0x0000));
+    BIT_SET(StatusRegister, C , (X >= fetchedData));
+    BIT_SET(StatusRegister, Z ,(compare &= 0x00FF == 0x0000));
     BIT_SET(StatusRegister, N , (compare & (1 << 6) != 0));
     pPBC = 0; 
 }
-void CPU::CPY(){}
+/*
+    Compare Y Register instruction: this compares contents of Y register with another memory held value and sets the zero and carry flags as appropriate.
+    set carry if X >= M, set zero if X = M, set N if bit 7 of the result is set. 
+*/
+void CPU::CPY(){
+    fetchedData = fetch(); 
+    Rock compare = static_cast<Rock>(Y - fetchedData);
+    BIT_SET(StatusRegister, C , (Y >= fetchedData));
+    BIT_SET(StatusRegister, Z , (compare &= 0x00FF == 0x0000));
+    BIT_SET(StatusRegister, N , (compare & (1 << 6) != 0));
+    pPBC = 0; 
+    
+}
+/*
+
+*/
 void CPU::DEC(){}
 void CPU::DEX(){}
 void CPU::DEY(){}
