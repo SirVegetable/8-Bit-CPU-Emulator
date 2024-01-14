@@ -5,10 +5,10 @@
 //Constructor
 CPU::CPU()
 {
-    // lookup =
-    // {
-    //         {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6},{&CPU:: , &CPU::, }
-    // };
+    lookup =
+    {
+            {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6}, 
+    };
 
 }
 //Destructor 
@@ -112,6 +112,7 @@ void CPU::ABS_Addr(){
     Rock highByte = read(ProgramCounter);
     ProgramCounter++; 
     targetAddress = lowByte | (highByte << 8);
+    pPBC = 0; 
 
 }
 /*
