@@ -222,9 +222,20 @@ void CPU::ZPY_Addr(){
     targetAddress = lowByte | (highByte << 8);
     pPBC = 0; 
 }
+/*
+    Relative Adressing Mode: This addressing mode is exclusive to the branching instructions. Since the 6502 has a range of -128
+    to 127 from original address, you can't branch to all addresses. To get around this the CPU uses a relative displacement to 
+    allow for branching outside the range. 
+
+*/
 
 void CPU::REL_Addr(){
-
+    relativeDisplacement = read(ProgramCounter);
+    ProgramCounter++;
+    if(relativeDisplacement & 0x80){
+        relativeDisplacement |=0xFF00; 
+    }
+    pPBC = 0; 
 
 }
 
