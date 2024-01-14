@@ -20,10 +20,30 @@ void CPU::busConnection(Bus *b){
     bus = b; 
 }
 
-
+/*
+    Reset System Interrupt: This will configure the cpu to a known state, setting the registers Accumulator, X to
+    0 and the Stackpointer will be set to the address 0xFF as stack memory is between 0x0100 - 0x01FF, I think the
+    value you set these to is arbitrary and would just depend on your routine, I'm setting to 0XFF because the stack
+    grows downwards. The program counter will be set to where the reset vector and is held typically at 0xFFFC and 
+    0xFFFD - the data at this address is set by the programmer at compile time. The Status register is reset and 
+    only the U flag is set. Lastly, the reset takes a total of 8 cycles to complete. 
+*/
 void CPU::Reset(){
+    Accum = 0x00; 
+    X = 0x00; 
+    Y = 0x00;   
+    StackPointer   = 0xFF;
+    StatusRegister = 0x00 | (1 << 5);
+    targetAddress  = 0xFFFC;
+    Rock lowByte  = read(targetAddress + 0 );
+    Rock highByte   = read(targetAddress + 1);
+    ProgramCounter = (highByte << 8) | lowByte;
 
-    
+    relativeDisplacement = 0x0000; 
+    targetAddress = 0x0000; 
+    fetchedData = 0x00; 
+    pPBC = 0; 
+    cycles = 8; 
 }
 void CPU::NonMaskableInterrupt(){
 
