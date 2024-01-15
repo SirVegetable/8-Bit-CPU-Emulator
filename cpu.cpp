@@ -7,7 +7,7 @@ CPU::CPU()
 {
     lookup =
     {
-            {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6}, 
+            {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6}
     };
 
 }
@@ -605,8 +605,8 @@ void CPU::LDY(){
     pPBC = 1; 
 }
 /* 
-    Logical Shift Right instruction: Each of the bits in Accumulator or said memory byte is shifted one the right. The bit that in the
-    bit 0 is shifted into the carry flag. Bit 7 is set to zero. C flag set to conetents of old bit 0, set Z if result = 0, set N if bit
+    Logical Shift Right instruction: Each of the bits in Accumulator or said memory byte is shifted one the right. The bit in the
+    bit 0 position is shifted into the carry flag. Bit 7 is set to zero. C flag set to contents of old bit 0, set Z if result = 0, set N if bit
     7 of the result is set. If the addressing mode is implied then Accumulator is shifted otherwise memory byte is shifted. 
 */
 
