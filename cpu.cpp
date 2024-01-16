@@ -177,7 +177,18 @@ void CPU::ABSY_Addr(){
 
 */
 void CPU::IND_Addr(){
-    Rock pointerAddress = read(ProgramCounter++);
+    Rock ptrLowByte = read(ProgramCounter);
+    ProgramCounter++; 
+    Rock ptrHighByte = read(ProgramCounter );
+    ProgramCounter++; 
+    Rock ptrAddress = (ptrHighByte << 8)  | ptrLowByte;
+
+    if(ptrLowByte == 0x00FF){
+        targetAddress = (read(ptrAddress & 0xFF00) << 8) | (read(ptrAddress + 0));
+    }
+    else{
+        targetAddress = (read(ptrAddress + 1) << 8) | (read(ptrAddress + 0));
+    }
     pPBC = 0; 
     
 }
