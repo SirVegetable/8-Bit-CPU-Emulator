@@ -45,10 +45,22 @@ void CPU::Reset(){
     pPBC = 0; 
     cycles = 8; 
 }
+
+/*
+    A NMI will behave the same as an IRQ which means it cannot be ignored but reads the new program counter
+    from location 0xFFFA. 
+*/
 void CPU::NonMaskableInterrupt(){
 
 }
+
+/*
+    IRQ: the CPU pushes the program counter and status register to the stack, setting the ID flag in order to 
+    ignore further IRQ requests and the program counter will read the values at 0xFFFE and 0xFFFF
+*/
 void CPU::InterruptRequest(){
+    push(ProgramCounter &= 0X00FF);
+    push(ProgramCounter &= 0xFF00);
 
 }
 Byte CPU::read(Rock address){
@@ -192,7 +204,14 @@ void CPU::IND_Addr(){
     pPBC = 0; 
     
 }
+/*  
+    Indexed Indirect addressing mode: used in conjunction with a table of address held on zero page. The address of the table is 
+    taken from the instruction and the X register added with it(zero pge wrapped) to give the location of the least significant 
+    byte of the target address. 
+*/
 void CPU::IZPX_Addr(){
+    Rock addressTable = read(ProgramCounter); 
+    ProgramCounter++; 
 
 }
 void CPU::IZPY_Addr(){
