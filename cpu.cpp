@@ -266,6 +266,11 @@ void CPU::IND_Addr(){
 void CPU::IZPX_Addr(){
     Rock addressTable = read(ProgramCounter); 
     ProgramCounter++; 
+    addressTable += X; 
+    Rock lowByte = read((addressTable & 0x00FF));
+    Rock highByte = read((addressTable + 1) & 0x00FF);
+    targetAddress = (highByte << 8) | lowByte; 
+    pPBC = 0; 
 
 }
 void CPU::IZPY_Addr(){
