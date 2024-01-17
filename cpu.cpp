@@ -386,8 +386,8 @@ void CPU::BRK(){
     ProgramCounter += 2;
 
     BIT_SET(StatusRegister,ID,1);
-    push((ProgramCounter &= 0xFF00));
-    push((ProgramCounter &= 0xFF00));
+    push((ProgramCounter >> 8) & 0x00FF);
+    push((ProgramCounter & 0x00FF));
     
     BIT_SET(StatusRegister,B,1);
     push(StatusRegister);
