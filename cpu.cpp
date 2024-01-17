@@ -52,6 +52,7 @@ void CPU::Reset(){
 */
 void CPU::NonMaskableInterrupt(){
 
+
 }
 
 /*
@@ -60,19 +61,24 @@ void CPU::NonMaskableInterrupt(){
     7 cycles. 
 */
 void CPU::InterruptRequest(){
-    push((ProgramCounter >> 8 ) & 0x00FF);
-    push((ProgramCounter & 0x00FF));
-    BIT_SET(StatusRegister,B , 0);   // Shows this was a hardware interrupt not a program interrupt
-    BIT_SET(StatusRegister,ID , 1);  // Interrupt Disabled
-    BIT_SET(StatusRegister,U , 1)    // Unused bit set 
-    push(StatusRegister);
+    if(BIT_GRAB(StatusRegister,ID) == 1){
+        push((ProgramCounter >> 8 ) & 0x00FF);
+        push((ProgramCounter & 0x00FF));
+        BIT_SET(StatusRegister,B , 0);   // Shows this was a hardware interrupt not a program interrupt
+        BIT_SET(StatusRegister,ID , 1);  // Interrupt Disabled
+        BIT_SET(StatusRegister,U , 1)    // Unused bit set 
+        push(StatusRegister);
 
-    targetAddress = 0xFFFE; 
-    Rock lowByte = read(targetAddress + 0);
-    Rock highByte = read(targetAddress + 1);
-    ProgramCounter = (highByte << 8) | lowByte; 
+        targetAddress = 0xFFFE; 
+        Rock lowByte = read(targetAddress + 0);
+        Rock highByte = read(targetAddress + 1);
+        ProgramCounter = (highByte << 8) | lowByte; 
 
     cycles = 7; 
+
+
+    }
+
 
 }
 Byte CPU::read(Rock address){

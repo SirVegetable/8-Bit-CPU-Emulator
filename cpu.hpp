@@ -1,7 +1,7 @@
 #pragma once 
 
 
-#define BIT_GRAB(SR,f)(((SR & f) > 0) ? 1 : 0);
+#define BIT_GRAB(SR,f)(((SR & f) > 0) ? 1 : 0)
 #define BIT_SET(SR,f,bl) if(bl){ (SR) |= (f); } else { (SR) &= (~f); };
 class Bus;
 
