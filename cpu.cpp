@@ -59,8 +59,9 @@ void CPU::NonMaskableInterrupt(){
     ignore further IRQ requests and the program counter will read the values at 0xFFFE and 0xFFFF
 */
 void CPU::InterruptRequest(){
-    push(ProgramCounter &= 0X00FF);
-    push(ProgramCounter &= 0xFF00);
+    push((ProgramCounter >> 8 ) & 0x00FF);
+    push((ProgramCounter & 0x00FF));
+    
 
 }
 Byte CPU::read(Rock address){
