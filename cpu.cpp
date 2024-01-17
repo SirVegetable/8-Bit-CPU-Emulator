@@ -137,12 +137,14 @@ Byte CPU::fetch(){
     Byte fetched_data = read(ProgramCounter);
     return fetched_data; 
 }
+/*
+    This function will handle the all of the execution of the instructions.
+*/
 void CPU::execute(){
-    // if cycles is 0 then the next instruction can be executed 
-    if(cycles == 0){
-        //fetch the opcode
-        Byte opcode = fetch();
-        
+
+    if(cycles == 0){                   // if cycles is 0 then the next instruction can be executed
+        Byte opcode = fetch();         // fetch the opcode
+        ProgramCounter++; 
 
     }
 }
@@ -654,7 +656,12 @@ void CPU::JMP(){
     counter to the target memory address
 */
 void CPU::JSR(){
-    ProgramCounter--; 
+    ProgramCounter--;
+    push((ProgramCounter >> 8) & 0x00FF);
+    push((ProgramCounter) & 0x00FF);
+
+    ProgramCounter = targetAddress; 
+    pPBC = 0; 
 }
 /*
     Load Accumulator instruction: Loads a byte of memory into the accumulator setting the zero and negative flags as appropriate. 
