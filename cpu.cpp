@@ -47,27 +47,18 @@ void CPU::Reset(){
 }
 
 /*
-    A NMI will behave the same as an IRQ which means it cannot be ignored but reads the new program counter
-    from location 0xFFFA. 
-*/
-void CPU::NonMaskableInterrupt(){
-
-
-}
-
-/*
     IRQ: the CPU pushes the program counter and status register to the stack, setting the ID flag in order to 
     ignore further IRQ requests and the program counter will read the values at 0xFFFE and 0xFFFF. IRQ takes
     7 cycles. 
 */
 void CPU::InterruptRequest(){
-    if(BIT_GRAB(StatusRegister,ID) == 1){
-        push((ProgramCounter >> 8 ) & 0x00FF);
-        push((ProgramCounter & 0x00FF));
-        BIT_SET(StatusRegister,B , 0);   // Shows this was a hardware interrupt not a program interrupt
-        BIT_SET(StatusRegister,ID , 1);  // Interrupt Disabled
-        BIT_SET(StatusRegister,U , 1)    // Unused bit set 
-        push(StatusRegister);
+    if(BIT_GRAB(StatusRegister,ID) == 0){
+        push((ProgramCounter >> 8 ) & 0x00FF);  // Pushing the lowbytes 
+        push((ProgramCounter & 0x00FF));        // Pushing the highbytes
+        BIT_SET(StatusRegister,B , 0);          // Shows this was a hardware interrupt not a program interrupt
+        BIT_SET(StatusRegister,ID , 1);         // Interrupt Disabled
+        BIT_SET(StatusRegister,U , 1)           // Unused bit set 
+        push(StatusRegister);                   // Push status register
 
         targetAddress = 0xFFFE; 
         Rock lowByte = read(targetAddress + 0);
@@ -76,11 +67,21 @@ void CPU::InterruptRequest(){
 
     cycles = 7; 
 
-
     }
 
+}
+
+
+/*
+    A NMI will behave the same as an IRQ which means it cannot be ignored but reads the new program counter
+    from location 0xFFFA. 
+*/
+void CPU::NonMaskableInterrupt(){
+    push((ProgramCounter >> 8) & 0x00FF);
 
 }
+
+
 Byte CPU::read(Rock address){
     return bus->read(address);
 
