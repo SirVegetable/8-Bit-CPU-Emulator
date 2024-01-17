@@ -273,7 +273,26 @@ void CPU::IZPX_Addr(){
     pPBC = 0; 
 
 }
+/*
+    Indirect Indexed addressing mode: the most common indirection mode used on the 6502. In instruction contains the zero page 
+    location of the least significant byte of 16 bit address. The address is read from memory into the target address and then
+    the contents of the Y register is added to that. If the addition of the Y address changes the highByte then a page boundary
+    has been crossed. 
+*/
 void CPU::IZPY_Addr(){
+    Rock addressTable = read(ProgramCounter);
+    ProgramCounter++;
+    Rock lowByte = read(addressTable & 0x00FF);
+    Rock highByte = read((addressTable + 1) & 0x00FF);
+    targetAddress = (highByte << 8) | lowByte;
+    targetAddress += Y; 
+
+    if((targetAddress & 0xFF00) != highByte){           // a page boundary will be crossed only if the high byte changes
+        pPBC = 1; 
+    }
+    else{
+        pPBC = 0; 
+    }
 
 }
 
@@ -303,7 +322,7 @@ void CPU::ZPX_Addr(){
 }
 /*
     Zero Page + Y Register Addressing Mode: Essentially the same thing as Zero Page addressing except we add the contents of the
-    Y register to the low-void; 
+    Y register to the low-byte 
 */
 void CPU::ZPY_Addr(){
     Rock lowByte = (read(ProgramCounter) + Y); 
