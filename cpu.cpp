@@ -29,21 +29,21 @@ void CPU::busConnection(Bus *b){
     only the U flag is set. Lastly, the reset takes a total of 8 cycles to complete. 
 */
 void CPU::Reset(){
-    Accum = 0x00; 
-    X = 0x00; 
-    Y = 0x00;   
-    StackPointer   = 0xFF;
-    StatusRegister = 0x00 | (1 << 5);
-    targetAddress  = 0xFFFC;
-    Rock lowByte  = read(targetAddress + 0 );
-    Rock highByte   = read(targetAddress + 1);
-    ProgramCounter = (highByte << 8) | lowByte;
+    Accum = 0x00;                                 // Reset Accumulator contents
+    X = 0x00;                                     // Reset X register contents 
+    Y = 0x00;                                     // Reset Y register contents
+    StackPointer = 0xFF;                          // Set stack pointer to the last byte of the Stack
+    StatusRegister = 0x00 | (U);                  // Set Unused flag to known state
+    targetAddress = 0xFFFC;                       // Target address specified by Reset 
+    Rock lowByte  = read(targetAddress + 0 );     // Read the low byte from the target address + 0 (0xFFFC)
+    Rock highByte = read(targetAddress + 1);      // Read the high byte from the target address + 1 (0xFFFD)
+    ProgramCounter = (highByte << 8) | lowByte;   // Assign contents to the program counter
 
-    relativeDisplacement = 0x0000; 
-    targetAddress = 0x0000; 
-    fetchedData = 0x00; 
-    pPBC = 0; 
-    cycles = 8; 
+    relativeDisplacement = 0x0000;                // Reset relative displacement
+    targetAddress = 0x0000;                       // Reset target address set
+    fetchedData = 0x00;                           // Reset variable holding data
+    pPBC = 0;                                     // Reset our bool for page boundary crossed
+    cycles = 8;                                   // Reset takes 8 cycles
 }
 
 /*
@@ -53,19 +53,19 @@ void CPU::Reset(){
 */
 void CPU::InterruptRequest(){
     if(BIT_GRAB(StatusRegister,ID) == 0){
-        push((ProgramCounter >> 8 ) & 0x00FF);  // Pushing the lowbytes 
-        push((ProgramCounter & 0x00FF));        // Pushing the highbytes
-        BIT_SET(StatusRegister,B , 0);          // Shows this was a hardware interrupt not a program interrupt
-        BIT_SET(StatusRegister,ID , 1);         // Interrupt Disabled
-        BIT_SET(StatusRegister,U , 1)           // Unused bit set 
-        push(StatusRegister);                   // Push status register
+        push((ProgramCounter >> 8 ) & 0x00FF);        // Pushing the lowbytes to the stack 
+        push((ProgramCounter & 0x00FF));              // Pushing the highbytes to the stack
+        BIT_SET(StatusRegister ,B , 0);               // Shows this was a hardware interrupt not a program interrupt
+        BIT_SET(StatusRegister, ID , 1);              // Interrupt Disabled bit set 
+        BIT_SET(StatusRegister, U , 1)                // Unused bit set to known state
+        push(StatusRegister);                         // Push status register to the stack
 
-        targetAddress = 0xFFFE; 
-        Rock lowByte = read(targetAddress + 0);
-        Rock highByte = read(targetAddress + 1);
-        ProgramCounter = (highByte << 8) | lowByte; 
+        targetAddress = 0xFFFE;                       // Address set for IRQ 
+        Rock lowByte = read(targetAddress + 0);       // Read the low byte from IRQ specified address
+        Rock highByte = read(targetAddress + 1);      // Read the high byte from IRQ specified address 
+        ProgramCounter = (highByte << 8) | lowByte;   // Set the read data to the program counter 
 
-    cycles = 7; 
+        cycles = 7;                                   // IRQ causes 7 cycles to occur
 
     }
 
@@ -77,8 +77,20 @@ void CPU::InterruptRequest(){
     from location 0xFFFA. 
 */
 void CPU::NonMaskableInterrupt(){
-    push((ProgramCounter >> 8) & 0x00FF);
+    push((ProgramCounter >> 8) & 0x00FF);        // Push the lowbytes to the stack
+    push((ProgramCounter & 0x0FF));              // Push the highbytes to the stack
 
+    BIT_SET(StatusRegister, B , 0);              // Shows this was a hardware interrupt not a program interrupt
+    BIT_SET(StatusRegister, U , 1);              // Set Unused bit to a known state
+    BIT_SET(StatusRegister, ID , 1)              // Interruped Disable Bit set 
+    push(StatusRegister);                        // Push the status register to the stack 
+
+    targetAddress = 0xFFFA;                      // Set the target address to 0xFFFE
+    Rock lowByte = read(targetAddress + 0);      // Read the low byte from the specified NMI address
+    Rock highByte = read(targetAddress + 1);     // Read the high byte fromt the specified NMI address
+    ProgramCounter = (highByte << 8) | lowByte;  // Assign the contents to the program counter
+
+    cycles = 7;                                  // NMI causes 7 cycles to occur
 }
 
 
