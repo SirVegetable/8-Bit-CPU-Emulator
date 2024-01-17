@@ -74,7 +74,7 @@ void CPU::InterruptRequest(){
 
 /*
     A NMI will behave the same as an IRQ which means it cannot be ignored but reads the new program counter
-    from location 0xFFFA. 
+    from location 0xFFFA. But you do not need to check the Interrupt Disable flag since it is non-maskable.
 */
 void CPU::NonMaskableInterrupt(){
     push((ProgramCounter >> 8) & 0x00FF);        // Push the lowbytes to the stack
@@ -93,25 +93,46 @@ void CPU::NonMaskableInterrupt(){
     cycles = 7;                                  // NMI causes 7 cycles to occur
 }
 
-
+/*
+    CPU connects to the bus and reads from the specified memory address. 
+*/
 Byte CPU::read(Rock address){
     return bus->read(address);
 
 }
+
+/*
+    CPU connects to the bus and writes the specified data to the specified memory address. 
+*/
 void CPU::write(Rock address, Byte data ){
     return bus->write(address, data);
 }
+
+/*
+    The CPU pushes the specified data to the stack. It must be offset with 0x0100 because 
+    the stack is between 0x0100 and 0x01FF. The stack pointer is an unsigned int so it will 
+    simulate the wrapping behaviour necessary to remain in the addressable range.
+*/
 void CPU::push(Byte data){
     bus->write(0x0100 + StackPointer, data);
     StackPointer--; 
 
 }
+/*
+    The CPU pops the data from the specified location on the stack. It must be offset with 
+    0x0100 because the stack is between 0x0100 and 0x01FF. The stack pointer is an unsigned 
+    int so it will simulate the wrapping behaviour necessary to remain in the addressable 
+    range.
+*/
 Byte CPU::pop(){
     Byte data = bus->read(0x0100 + StackPointer);
     StackPointer++; 
     return data; 
 }
-
+/*
+    The CPU fetchs the data from memory from the program counter. The program counter will be incremented this
+    is handled in the execution function. 
+*/
 Byte CPU::fetch(){
     Byte fetched_data = read(ProgramCounter);
     return fetched_data; 
@@ -340,7 +361,7 @@ void CPU::BIT(){
     fetchedData = fetch();
     Byte throwAway = Accum & fetchedData; 
     BIT_SET(StatusRegister,Z, (throwAway == 0x00));
-    BIT_SET(StatusRegister, N, (fetchedData & (1<<7)));
+    BIT_SET(StatusRegister, N, (fetchedData & (1 << 7)));
     BIT_SET(StatusRegister,OV,(fetchedData & (1 << 6)));
 
     pPBC = 0; 
