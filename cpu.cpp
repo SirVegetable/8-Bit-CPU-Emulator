@@ -130,7 +130,7 @@ Byte CPU::pop(){
     return data; 
 }
 /*
-    The CPU fetchs the data from memory from the targetAddress.If the addressing mode is implied 
+    The CPU fetchs the data from memory from the targetAddress. If the addressing mode is implied 
     then no new data is required otherwise the data needed for the instruction resides at memory
     address pointed at by target address.
 */
@@ -166,7 +166,9 @@ void CPU::execute(){
 
 /*
     Implied Addressing Mode: These instruction act directly on one or more registers or flags internal to the CPU, 
-    single-byte instructions, no operand, excusively target the contents of the Accumulator. 
+    single-byte instructions, no operand, has a special sub mode called Accumulator addressing for certain instructions 
+    that acts directly on the Accumulator, Ex. LSR when in addressing mode will act Logically shift the contents of the 
+    Accum hence fetchedData = Accum. 
 */
 void CPU::IMP_Addr(){
     fetchedData = Accum;
@@ -811,8 +813,9 @@ void CPU::LDY(){
 }
 /* 
     Logical Shift Right instruction: Each of the bits in Accumulator or said memory byte is shifted one the right. The bit in the
-    bit 0 position is shifted into the carry flag. Bit 7 is set to zero. C flag set to contents of old bit 0, set Z if result = 0, set N if bit
-    7 of the result is set. If the addressing mode is implied then Accumulator is shifted otherwise memory byte is shifted. 
+    bit 0 position is shifted into the carry flag. Bit 7 is set to zero. C flag set to contents of old bit 0, set Z if result = 0,
+    set N if bit 7 of the result is set. If the addressing mode is implied then Accumulator is shifted otherwise memory byte is 
+    shifted. 
 */
 
 void CPU::LSR(){
@@ -891,11 +894,23 @@ void CPU::PLP(){
 }
 /*
     Rotate Left instruction: Move each of the bits in either A or M one place to the left. Bit 0 is filled with the current value of the 
-    carry flag while the old bit 7 becomes the new carry flag value. Set if bit 7 of the result is set. If the addressing mode is IMP then
-    the rotate is performed on the Accumulator, otherwise 
+    carry flag while the old bit 7 becomes the new carry flag value. Set negative flag if bit 7 of the result is set. If the addressing 
+    mode is IMP then the rotate is performed on the Accumulator, otherwise perform on memory data and write back to memory. 
 
 */
-void CPU::ROL(){}
+void CPU::ROL(){
+    fetchedData = fetch();
+    Rock rotatedData = static_cast<Rock>(fetchedData << 1) | BIT_GRAB(StatusRegister, C);
+    BIT_SET(StatusRegister, C , rotatedData & 0x0100); 
+    BIT_SET(StatusRegister, N , rotatedData & 0x80);
+    if(lookup[opcode].addr_mode == &CPU::IMP_Addr){
+        Accum = rotatedData & 0x00FF; 
+    }
+    else{
+        write(targetAddress, rotatedData & 0x00FF);
+    }
+    pPBC = 0; 
+}
 void CPU::ROR(){}
 void CPU::RTI(){}
 void CPU::RTS(){}
@@ -908,7 +923,7 @@ void CPU::SEC(){
     pPBC = 0; 
 }
 /*
-    Set Decimal Flag instruction: set the cdecimal flag 
+    Set Decimal Flag instruction: set the decimal flag 
 */
 void CPU::SED(){
     BIT_SET(StatusRegister, D , 1);
