@@ -516,7 +516,7 @@ void CPU::BPL(){
         targetAddress = newPC;
         cycles++; 
         
-        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
+        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){  // Check if high byte changes
             cycles++; 
         }
         ProgramCounter = targetAddress; 
@@ -547,7 +547,7 @@ void CPU::BRK(){
 }
 /*
     Branch if Overflow Clear instruction: If the overflow flag is clear then add the relative displacement to the program counter to cause a branch to
-    a new location. If branch is successful cycles is incremented and check if page boundary is crossed.
+    a new location. If branch is successful cycles is incremented and increment again if page boundary is crossed.
 
 */
 void CPU::BVC(){
@@ -557,20 +557,18 @@ void CPU::BVC(){
         targetAddress = newPC; 
         cycles++;
 
-        if((targetAddress &= 0xFF00) != (ProgramCounter &= 0xFF00)){
-            pPBC = 1; 
-        }
-        else{
-            pPBC = 0; 
+        if((targetAddress &= 0xFF00) != (ProgramCounter &= 0xFF00)){ // Check if high byte changes
+            cycles++; 
         }
         ProgramCounter = targetAddress;
         
     }
+    pPBC = 0; 
 
 }
 /*
     Branch If Overflow Set instruction: if the Overflow flag is set then add the relative displacement to the program counter and branch to new
-    location. If branch succeeds cycles is incremeneted and check if page boundary is crossed then we store that for cycle increments later.
+    location. If branch succeeds cycles is incremeneted and check if page boundary is crossed then increment cycles.
 */
 void CPU::BVS(){
     bool overflowFlag = BIT_GRAB(StatusRegister,OV);
@@ -579,15 +577,12 @@ void CPU::BVS(){
         targetAddress = newPC;
         cycles++; 
         
-        if((targetAddress &= 0xFF00) != (ProgramCounter &= 0xFF00)){
-            pPBC = 1; 
-        }
-        else{
-            pPBC = 0; 
+        if((targetAddress &= 0xFF00) != (ProgramCounter &= 0xFF00)){  // Check if high byte changes
+            cycles++; 
         }
         ProgramCounter = targetAddress;
     }
-
+    pPBC = 0; 
 }
 /*
     Clear Carry Flag: set the carry flag to 0.
