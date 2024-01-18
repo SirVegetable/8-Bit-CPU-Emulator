@@ -125,8 +125,8 @@ void CPU::push(Byte data){
     range.
 */
 Byte CPU::pop(){
-    Byte data = bus->read(0x0100 + StackPointer);
     StackPointer++; 
+    Byte data = bus->read(0x0100 + StackPointer);
     return data; 
 }
 /*
@@ -857,10 +857,16 @@ void CPU::PHP(){
     BIT_SET(StatusRegister, U, 0 );
     pPBC = 0; 
 
-
-
 }
-void CPU::PLA(){}
+/*
+    Pop Accumulator instruction: Pops the accumulator off of the stack. The zero and negative flags are set as appropriate, if the
+    Accumulator = 0 zero flag is set and if bit 7 is set of Accumulator set the negative bit. 
+*/
+void CPU::PLA(){
+    Accum = pop();
+    BIT_SET(StatusRegister, Z , Accum == 0x00);
+    BIT_SET(StatusRegister, N , Accum & 0x80);
+}
 void CPU::PLP(){}
 void CPU::ROL(){}
 void CPU::ROR(){}
