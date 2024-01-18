@@ -353,8 +353,24 @@ void CPU::REL_Addr(){
 
 // ---------INSTRUCTION SET-----------
 
-// Add With Carry
-void CPU::ADC(){}
+/*
+    Add With Carry instruction: This instruction adds the contents of a memory location to the accumulator together with the carry bit. 
+    If overflow occurs the carry bit is set, this enables multiple byte addition to be performed. Set carry bit if overflow occurs, set
+    Zero flag if A = 0 (the sum is 0), set negative flag if bit 7 is set, overflow is set if signed operation returns a different sign 
+    then expected. Ex. Pos + Pos = Neg or Neg + Neg = Pos. Possible page boundary can be crossed. 
+
+*/
+void CPU::ADC(){
+    Byte memData = fetch();
+    Rock sum = static_cast<Rock>(Accum) + static_cast<Rock> (memData) + static_cast<Rock>(BIT_GRAB(StatusRegister, C));
+    BIT_SET(StatusRegister, C , sum > 0xFF);
+    BIT_SET(StatusRegister, Z , (sum & 0xFF) == 0x00);
+    bool overflowCheck = (~(static_cast<Rock>(Accum) ^ static_cast<Rock>(memData)) & (static_cast<Rock>(Accum) ^ static_cast<Rock>(sum))) & 0x0080;
+    BIT_SET(StatusRegister, OV , overflowCheck);
+    BIT_SET(StatusRegister, N , sum & 0x0080);
+    Accum = sum & 0x00FF; 
+    pPBC = 1;  
+}
 
 /* 
     AND instruction: This is the Bitwise logic AND, used on the Accumulator with the contents of a byte of memory and set 
@@ -369,7 +385,9 @@ void CPU::AND(){
     pPBC = 1; 
 }
 
-// Arithmethic Shift Left
+/*
+    Arithmetic Shift Left instruction: 
+*/
 void CPU::ASL(){}
 
 // Branch on Clear Carry
@@ -377,7 +395,11 @@ void CPU::BCC(){}
 
 void CPU::BCS(){}
 
-void CPU::BEQ(){}
+void CPU::BEQ(){
+
+
+
+}
 /*
     BIT instruction: the instruction is used to test if one or more bits are set in a target memory location. Accumulator is ANDed with
     the value in memory to set or clear the Zero flag, result is not kept. Bits 7 and 6 of the value from memory are copied into the N
