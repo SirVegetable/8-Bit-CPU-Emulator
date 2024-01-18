@@ -809,7 +809,18 @@ void CPU::LDY(){
 */
 
 void CPU::LSR(){
-    
+    Byte memData = fetch();
+    BIT_SET(StatusRegister, C , memData & 0x0001);   // Set contents of the carry flag to the last
+    Rock shiftedRight = static_cast<Rock>(memData) >> 1;
+    BIT_SET(StatusRegister, Z , (shiftedRight & 0x00FF) == 0x0000);
+    BIT_SET(StatusRegister, N , shiftedRight & 0x0080);
+    if(lookup[opcode].addr_mode == CPU::IMP_Addr){
+        Accum = shiftedRight & 0x00FF; 
+    }
+    else{
+        write(targetAddress, shiftedRight & 0x00FF);
+    }
+    pPBC = 0; 
 }
 void CPU::NOP(){}
 /*
