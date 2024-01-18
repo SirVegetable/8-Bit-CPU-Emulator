@@ -837,8 +837,29 @@ void CPU::ORA(){
     pPBC = 0; 
 
 }
-void CPU::PHA(){}
-void CPU::PHP(){}
+
+/*
+    Push Accumulator instruction: Push the contents of the Accumulator to the stack. No flags changed. 
+*/
+void CPU::PHA(){
+    push(Accum);
+    pPBC = 0; 
+}
+/*  
+    Pushes a copy of the status flags onto the stack. Set the break to 1 before pushing and Unused flag to ensure state is known.
+    Then unset. 
+*/
+void CPU::PHP(){
+    BIT_SET(StatusRegister, B , 1);
+    BIT_SET(StatusRegister, U , 1);
+    push(StatusRegister);
+    BIT_SET(StatusRegister, B , 0);
+    BIT_SET(StatusRegister, U, 0 );
+    pPBC = 0; 
+
+
+
+}
 void CPU::PLA(){}
 void CPU::PLP(){}
 void CPU::ROL(){}
