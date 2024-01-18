@@ -822,6 +822,8 @@ void CPU::LSR(){
     }
     pPBC = 0; 
 }
+
+
 void CPU::NOP(){}
 /*
     Logical Inclusive OR instruction: an inclusive OR is performed bit by bit on the accumulator using the contents of a byte of memory
@@ -859,15 +861,30 @@ void CPU::PHP(){
 
 }
 /*
-    Pop Accumulator instruction: Pops the accumulator off of the stack. The zero and negative flags are set as appropriate, if the
-    Accumulator = 0 zero flag is set and if bit 7 is set of Accumulator set the negative bit. 
+    Pop Accumulator instruction: Pops contents for the accumulator off of the stack. The zero and negative flags are set as appropriate,
+    if the Accumulator = 0 zero flag is set and if bit 7 is set of Accumulator set the negative bit. 
 */
 void CPU::PLA(){
     Accum = pop();
     BIT_SET(StatusRegister, Z , Accum == 0x00);
     BIT_SET(StatusRegister, N , Accum & 0x80);
+    pPBC = 0; 
+
 }
-void CPU::PLP(){}
+
+/*
+    Pull Processor Status instruction: Pops contents of stack to the Status Register. The flags will take on the new states as determined
+    by the value popped. 
+*/
+void CPU::PLP(){
+    StatusRegister = pop();
+    BIT_SET(StatusRegister, U, 1);
+    pPBC = 0; 
+
+}
+/*
+    Rotate Left instruction: 
+*/
 void CPU::ROL(){}
 void CPU::ROR(){}
 void CPU::RTI(){}
