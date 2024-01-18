@@ -409,9 +409,9 @@ void CPU::ASL(){
 }
 
 /*
-    Branch if Carry Clear: If the carry flag is clear then add the relative displacement to the program to cause a branch to a
-    new location. No flags are changed. Increment cycles if branch succeeds. If page boundary is crossed cycles is incremented 
-    again. 
+    Branch if Carry Clear: If the carry flag is clear then add the relative displacement to the program counter to cause a 
+    branch to a new location. No flags are changed. Increment cycles if branch succeeds. If page boundary is crossed cycles 
+    is incremented again. 
 */
 void CPU::BCC(){
     bool carryCheck = BIT_GRAB(StatusRegister, C);
@@ -428,8 +428,27 @@ void CPU::BCC(){
     pPBC = 0; 
 
 }
+/*
+    Branch if Carry Set: If the carry flag is set then add the relative displacement to the program counter to cause a branch 
+    to a new location. No flags are changed. Increment cycles if branch succeeds. If page boundary is crossed cycles will need
+    to be incremented again. 
+*/
+void CPU::BCS(){
+    bool carryCheck = BIT_GRAB(StatusRegister, C);
+    if(carryCheck != 0){
+        targetAddress = ProgramCounter + relativeDisplacement; 
+        cycles++; 
 
-void CPU::BCS(){}
+        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){   // Check if high byte changes
+            cycles++;
+        }
+        ProgramCounter = targetAddress; 
+
+    }
+    pPBC = 0; 
+
+
+}
 
 void CPU::BEQ(){
 
@@ -437,8 +456,8 @@ void CPU::BEQ(){
 
 }
 /*
-    BIT instruction: the instruction is used to test if one or more bits are set in a target memory location. Accumulator is ANDed with
-    the value in memory to set or clear the Zero flag, result is not kept. Bits 7 and 6 of the value from memory are copied into the N
+    BIT instruction: the instruction is used to test if one or more bits are set in a target memory location. Accumulator is ANDed 
+    with the value in memory to set or clear the Zero flag, result is not kept. Bits 7 and 6 of the value from memory are copied into the N
     and OV flags.
 */
 void CPU::BIT(){
@@ -473,7 +492,7 @@ void CPU::BMI(){
 }
 /*
     Branch If Not Equal instruction: if the Zero flag is clear then add the relative displacement to program counter to cause a branch to a new 
-    location. This instruction will increment by one cycles and set page boundary crossed to 1 if its true.
+    location. This instruction will increment by one cycles and an additional cycle if page bop
 */
 void CPU::BNE(){
     bool nFlagCheck = BIT_GRAB(StatusRegister,N);
