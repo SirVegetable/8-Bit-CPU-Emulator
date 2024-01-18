@@ -151,7 +151,7 @@ void CPU::execute(){
         bool pPBC1 = pPBC;                     // Save the state of pPBC after addressing mode is called
         (this->*lookup[opcode].instruction)(); // Call the opcode instruction
         bool pPBC2 = pPBC;                     // Save the state of pPBC after instruction is called
-        
+
     }
 }
 
@@ -455,10 +455,24 @@ void CPU::BCS(){
 
 
 }
+/*
+    Branch if Equal instruction: If the zero flag is set then add the relative displacement to the program counter to cause a branch
+    to a new location. No flags are changed. Increment cyckes if branch succeeds. If page boundary is crossed cycles is incremented 
+    an additional time. 
+*/
 
 void CPU::BEQ(){
+    bool zeroCheck = BIT_GRAB(StatusRegister, Z);
+    if(zeroCheck){
+        targetAddress = ProgramCounter + relativeDisplacement; 
+        cycles++; 
+        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){  // Check if high byte changes
+            cycles++; 
+        }
+        ProgramCounter = targetAddress; 
 
-
+    }
+    pPBC = 0; 
 
 }
 /*
