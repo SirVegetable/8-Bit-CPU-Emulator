@@ -471,7 +471,7 @@ void CPU::BIT(){
 } 
 /*
     Branch If Minus instruction: if the negative flag is set then add the relative displacemenet to the program counter to cause a branch to
-    the new location. This instruction increments cycles if branch succeeeds and sets page boundary crossed if its true.  
+    the new location. This instruction increments cycles if branch succeeeds and an additional cycle if page boundary is passed. 
 */  
 void CPU::BMI(){
     bool nFlagCheck = BIT_GRAB(StatusRegister, N);
@@ -489,7 +489,7 @@ void CPU::BMI(){
 }
 /*
     Branch If Not Equal instruction: if the Zero flag is clear then add the relative displacement to program counter to cause a branch to a new 
-    location. This instruction will increment by one cycles and an additional cycle if page bop
+    location. This instruction will increment by one cycles and an additional cycle if page boundary is passed. 
 */
 void CPU::BNE(){
     bool nFlagCheck = BIT_GRAB(StatusRegister,N);
@@ -499,13 +499,11 @@ void CPU::BNE(){
         cycles++; 
         
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){    // Check if high byte changes
-            pPBC = 1; 
-        }
-        else{
-            pPBC = 0; 
+            cycles++; 
         }
         ProgramCounter = targetAddress; 
     }
+    pPBC = 0; 
 }
 /*
     Branch If Positive instruction: if the Zero flag is clear then add the relative displacement to the program location to branch to a new
