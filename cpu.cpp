@@ -507,7 +507,7 @@ void CPU::BNE(){
 }
 /*
     Branch If Positive instruction: if the Zero flag is clear then add the relative displacement to the program location to branch to a new
-    location. Add a cycle if branch succeeds and set page boundary crossed if its true. 
+    location. Add a cycle if branch succeeds and increment cycles if a page boundary is crossed.  
 */
 void CPU::BPL(){
     bool nFlagCheck = BIT_GRAB(StatusRegister,N);
@@ -517,13 +517,11 @@ void CPU::BPL(){
         cycles++; 
         
         if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
-            pPBC = 1; 
-        }
-        else{
-            pPBC = 0;
+            cycles++; 
         }
         ProgramCounter = targetAddress; 
     }
+    pPBC = 0; 
 }
 
 /*
