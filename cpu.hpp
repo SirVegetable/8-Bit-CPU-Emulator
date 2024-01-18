@@ -20,12 +20,12 @@ public:
         N = 1 << 7   // Negative
     };
     
-    Bus *bus;                     // Pointer to the bus which connects the bus to the cpu and allows for read and write
-    Byte Accum,X,Y = 0x00;        // Acumulator, X and Y Registers
-    Byte StackPointer= 0x00;      // Stack Pointer
-    Rock ProgramCounter= 0x0000;  // Program Counter
-    Byte StatusRegister = 0x00;   // Status Register 
-
+    Bus *bus;                      // Pointer to the bus which connects the bus to the cpu and allows for read and write
+    Byte Accum,X,Y = 0x00;         // Acumulator, X and Y Registers
+    Byte StackPointer= 0x00;       // Stack Pointer
+    Rock ProgramCounter = 0x0000;  // Program Counter
+    Byte StatusRegister = 0x00;    // Status Register 
+    
     
     
     void busConnection(Bus *b);  // Connecting CPU to the bus
@@ -57,12 +57,13 @@ public:
 
 
 private:
-    Byte cycles = 0x00;                   // variable to track cycles 
-    Byte ticks = 0x00;                    // tick to measure clock 
-    Byte fetchedData = 0x00;              // holds the data that has been fetched 
-    Rock targetAddress = 0x0000;          // holds the current target address  
-    Rock relativeDisplacement = 0x0000;   // relative displacement used to add to the program counter when branching occurs 
-    bool pPBC = 0;                        // possible page boundary crossed, will be set to 1 if its possible and 0 if not 
+    Byte cycles = 0x00;                   // Variable to track cycles 
+    Byte ticks = 0x00;                    // Tick to measure clock 
+    Byte fetchedData = 0x00;              // Holds the data for ALU input value
+    Byte opcode = 0x00;                   // Instruction byte
+    Rock targetAddress = 0x0000;          // Holds the current target address  
+    Rock relativeDisplacement = 0x0000;   // Relative displacement used to add to the program counter when branching occurs 
+    bool pPBC = 0;                        // Possible page boundary crossed, will be set to 1 if its possible and 0 if not 
 
 
      

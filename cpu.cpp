@@ -78,7 +78,7 @@ void CPU::InterruptRequest(){
 */
 void CPU::NonMaskableInterrupt(){
     push((ProgramCounter >> 8) & 0x00FF);        // Push the lowbytes to the stack
-    push((ProgramCounter & 0x0FF));              // Push the highbytes to the stack
+    push((ProgramCounter & 0x00FF));             // Push the highbytes to the stack
 
     BIT_SET(StatusRegister, B , 0);              // Shows this was a hardware interrupt not a program interrupt
     BIT_SET(StatusRegister, U , 1);              // Set Unused bit to a known state
@@ -386,9 +386,27 @@ void CPU::AND(){
 }
 
 /*
-    Arithmetic Shift Left instruction: 
+    Arithmetic Shift Left instruction: This operation shifts all the bits of the accumulator or memory contents one bit left. 
+    Bit 0 is set to 0 and bit 7 is placed in the carry flag. The effect of this operation is to multiply the memory contents 
+    by 2 (ignoring 2's complement considerations), setting the carry if the result will not fit in 8 bits. If the addressing 
+    mode is Implied then the accumulator is directly updated, if not the result is written back to memory shifted left. 
 */
-void CPU::ASL(){}
+void CPU::ASL(){
+    Byte memData = fetch(); 
+    Rock shiftedLeft = static_cast<Rock>(memData) << 1; 
+    BIT_SET(StatusRegister, C , (shiftedLeft & 0xFF00) > 0);
+    BIT_SET(StatusRegister, Z , (shiftedLeft & 0x00FF) == 0x00);
+    BIT_SET(StatusRegister, N , shiftedLeft & 0x80);
+
+    if(lookup[opcode].addr_mode == CPU::IMP_Addr){
+        Accum = shiftedLeft & 0x00FF; 
+    }
+    else{
+        write(targetAddress, shiftedLeft & 0x00FF);
+    }
+    pPBC = 0; 
+
+}
 
 // Branch on Clear Carry
 void CPU::BCC(){}
