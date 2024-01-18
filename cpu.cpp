@@ -130,12 +130,19 @@ Byte CPU::pop(){
     return data; 
 }
 /*
-    The CPU fetchs the data from memory from the program counter. The program counter will be incremented this
-    is handled in the execution function. 
+    The CPU fetchs the data from memory from the targetAddress.If the addressing mode is implied 
+    then no new data is required otherwise the data needed for the instruction resides at memory
+    address pointed at by target address.
 */
 Byte CPU::fetch(){
-    Byte fetched_data = read(ProgramCounter);
-    return fetched_data; 
+    if(lookup[opcode].addr_mode != &CPU::IMP_Addr){
+        Byte fetched_data = read(targetAddress);
+        return fetched_data;
+
+    }
+    else{
+        return fetchedData;  // original contents is returned. 
+    }
 }
 /*
     This function will handle the all of the execution of the instructions.
@@ -367,11 +374,11 @@ void CPU::REL_Addr(){
 
 */
 void CPU::ADC(){
-    Byte memData = fetch();
-    Rock sum = static_cast<Rock>(Accum) + static_cast<Rock> (memData) + static_cast<Rock>(BIT_GRAB(StatusRegister, C));
+    fetchedData = fetch();
+    Rock sum = static_cast<Rock>(Accum) + static_cast<Rock> (fetchedData) + static_cast<Rock>(BIT_GRAB(StatusRegister, C));
     BIT_SET(StatusRegister, C , sum > 0xFF);
     BIT_SET(StatusRegister, Z , (sum & 0xFF) == 0x00);
-    bool overflowCheck = (~(static_cast<Rock>(Accum) ^ static_cast<Rock>(memData)) & (static_cast<Rock>(Accum) ^ static_cast<Rock>(sum))) & 0x0080;
+    bool overflowCheck = (~(static_cast<Rock>(Accum) ^ static_cast<Rock>(fetchedData)) & (static_cast<Rock>(Accum) ^ static_cast<Rock>(sum))) & 0x0080;
     BIT_SET(StatusRegister, OV , overflowCheck);
     BIT_SET(StatusRegister, N , sum & 0x0080);
     Accum = sum & 0x00FF; 
@@ -398,8 +405,8 @@ void CPU::AND(){
     mode is Implied then the accumulator is directly updated, if not the result is written back to memory shifted left. 
 */
 void CPU::ASL(){
-    Byte memData = fetch(); 
-    Rock shiftedLeft = static_cast<Rock>(memData) << 1; 
+    fetchedData = fetch(); 
+    Rock shiftedLeft = static_cast<Rock>(fetchedData) << 1; 
     BIT_SET(StatusRegister, C , (shiftedLeft & 0xFF00) > 0);
     BIT_SET(StatusRegister, Z , (shiftedLeft & 0x00FF) == 0x00);
     BIT_SET(StatusRegister, N , shiftedLeft & 0x80);
@@ -809,9 +816,9 @@ void CPU::LDY(){
 */
 
 void CPU::LSR(){
-    Byte memData = fetch();
-    BIT_SET(StatusRegister, C , memData & 0x0001);   // Set contents of the carry flag to the last
-    Rock shiftedRight = static_cast<Rock>(memData) >> 1;
+    fetchedData = fetch();
+    BIT_SET(StatusRegister, C , fetchedData & 0x0001);   // Set contents of the carry flag to the last
+    Rock shiftedRight = static_cast<Rock>(fetchedData) >> 1;
     BIT_SET(StatusRegister, Z , (shiftedRight & 0x00FF) == 0x0000);
     BIT_SET(StatusRegister, N , shiftedRight & 0x0080);
     if(lookup[opcode].addr_mode == CPU::IMP_Addr){
@@ -883,7 +890,10 @@ void CPU::PLP(){
 
 }
 /*
-    Rotate Left instruction: 
+    Rotate Left instruction: Move each of the bits in either A or M one place to the left. Bit 0 is filled with the current value of the 
+    carry flag while the old bit 7 becomes the new carry flag value. Set if bit 7 of the result is set. If the addressing mode is IMP then
+    the rotate is performed on the Accumulator, otherwise 
+
 */
 void CPU::ROL(){}
 void CPU::ROR(){}
