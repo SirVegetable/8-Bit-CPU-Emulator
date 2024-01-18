@@ -408,8 +408,26 @@ void CPU::ASL(){
 
 }
 
-// Branch on Clear Carry
-void CPU::BCC(){}
+/*
+    Branch if Carry Clear: If the carry flag is clear then add the relative displacement to the program to cause a branch to a
+    new location. No flags are changed. Increment cycles if branch succeeds. If page boundary is crossed cycles is incremented 
+    again. 
+*/
+void CPU::BCC(){
+    bool carryCheck = BIT_GRAB(StatusRegister, C);
+    if(carryCheck == 0){
+        targetAddress = ProgramCounter + relativeDisplacement; 
+        cycles++;
+
+        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){   // Check if high byte changes
+            cycles++;
+        }
+        ProgramCounter = targetAddress; 
+
+    }
+    pPBC = 0; 
+
+}
 
 void CPU::BCS(){}
 
