@@ -46,7 +46,7 @@ public:
 
     // --------------Instruction Set--------------
     struct Instruction_Set{
-        void  (CPU::*op_code)(void) = nullptr;    // function pointer to the first opcode to used for instruction 
+        void  (CPU::*instruction)(void) = nullptr; // function pointer to the first opcode to used for instruction 
         void  (CPU::*addr_mode)(void) = nullptr;  // function pointer to the addressing mode used for instruction 
         Byte  cycles = 0x00;                      // number of cycles the instruction will take 
 

@@ -142,10 +142,16 @@ Byte CPU::fetch(){
 */
 void CPU::execute(){
 
-    if(cycles == 0){                   // if cycles is 0 then the next instruction can be executed
-        Byte opcode = fetch();         // fetch the opcode
-        ProgramCounter++; 
-
+    if(cycles == 0){                           // If cycles is 0 then the next instruction can be executed
+        Byte opcode = fetch();                 // Fetch the opcode
+        ProgramCounter++;                      // Increment program counter 
+        BIT_SET(StatusRegister, U , 1);        // Set the status register unused bit to known state just in case.
+        cycles = lookup[opcode].cycles;        // Get starting cycles
+        (this->*lookup[opcode].addr_mode)();   // Call the addressing mode function
+        bool pPBC1 = pPBC;                     // Save the state of pPBC after addressing mode is called
+        (this->*lookup[opcode].instruction)(); // Call the opcode instruction
+        bool pPBC2 = pPBC;                     // Save the state of pPBC after instruction is called
+        
     }
 }
 
