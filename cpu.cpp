@@ -457,8 +457,8 @@ void CPU::BEQ(){
 }
 /*
     BIT instruction: the instruction is used to test if one or more bits are set in a target memory location. Accumulator is ANDed 
-    with the value in memory to set or clear the Zero flag, result is not kept. Bits 7 and 6 of the value from memory are copied into the N
-    and OV flags.
+    with the value in memory to set or clear the Zero flag, result is not kept. Bits 7 and 6 of the value from memory are copied 
+    into the N and OV flags.
 */
 void CPU::BIT(){
     fetchedData = fetch();
@@ -480,15 +480,12 @@ void CPU::BMI(){
         targetAddress = newPC;
         cycles++;
         
-        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
-            pPBC = 1; 
+        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){  // Check if high byte changes
+            cycles++; 
         }
-        else{
-            pPBC = 0; 
-        }
-        //set program counter to the new TargetAddress
         ProgramCounter = targetAddress; 
     }
+    pPBC = 0; 
 }
 /*
     Branch If Not Equal instruction: if the Zero flag is clear then add the relative displacement to program counter to cause a branch to a new 
@@ -501,7 +498,7 @@ void CPU::BNE(){
         targetAddress = newPC;
         cycles++; 
         
-        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){
+        if((targetAddress & 0xFF00) != (ProgramCounter & 0xFF00)){    // Check if high byte changes
             pPBC = 1; 
         }
         else{
