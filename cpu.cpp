@@ -7,7 +7,8 @@ CPU::CPU()
 {
     lookup =
     {
-            {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6}, {&CPU::Illegal_opcode,&CPU::IMM_Addr},{&CPU::Illegal_opcode, &CPU::IZPX_Addr, 8},{&CPU::NOP,&CPU::ZP_Addr,3},{&CPU::ORA, &CPU::ZP_Addr, 3}, {&CPU::ASL, &CPU::ZP_Addr, 5},{&CPU::Illegal_opcode,&CPU::IMM_Addr,2}, {&CPU::NOP,&CPU::ABS_Addr,4},
+            {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6}, {&CPU::IOC,&CPU::IMM_Addr,2},{&CPU::IOC, &CPU::IZPX_Addr, 8},{&CPU::NOP,&CPU::ZP_Addr,3},{&CPU::ORA, &CPU::ZP_Addr, 3}, {&CPU::ASL, &CPU::ZP_Addr, 5},{&CPU::IOC,&CPU::ZP_Addr,5}, {&CPU::PHP, &CPU::IMP_Addr, 3}, {&CPU::ORA, &CPU::IMM_Addr, 2}, {&CPU::ASL, &CPU::IMM_Addr, 2}, {&CPU::IOC, &CPU::IMM_Addr,2}, {&CPU::NOP, &CPU::ABS_Addr,4}, {&CPU::ORA, &CPU::ABS_Addr,4}, {&CPU::ASL, &CPU::ABS_Addr, 6}, {&CPU::IOC, &CPU::ABS_Addr, 6},
+            
     };
 
 }
@@ -1081,6 +1082,6 @@ void CPU::TYA(){
 
 }
 
-void CPU::Illegal_opcode(){
+void CPU::IOC(){
     pPBC = 0; 
 }

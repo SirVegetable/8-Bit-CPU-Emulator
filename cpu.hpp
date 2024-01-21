@@ -90,7 +90,9 @@ private:
     void  ROR(); void  RTI(); void  RTS(); void  SBC(); void  SEC(); void  SED(); void  SEI(); void  STA(); 
     void  STX(); void  STY(); void  TAX(); void  TAY(); void  TSX(); void  TXA(); void  TXS(); void  TYA(); 
     
-    void  Illegal_opcode(); 
+
+    // function to encompass most all Ilegal opcodes except the NOP ones.
+    void  IOC(); 
 
 }; 
 
