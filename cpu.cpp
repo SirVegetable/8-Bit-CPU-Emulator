@@ -7,7 +7,7 @@ CPU::CPU()
 {
     lookup =
     {
-            {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6}
+            {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6}, {&CPU::Illegal_opcode,&CPU::IMM_Addr},{&CPU::Illegal_opcode, &CPU::IZPX_Addr, 8},{&CPU::NOP,&CPU::ZP_Addr,3},{&CPU::ORA, &CPU::ZP_Addr, 3}, {&CPU::ASL, &CPU::ZP_Addr, 5},{&CPU::Illegal_opcode,&CPU::IMM_Addr,2}, {&CPU::NOP,&CPU::ABS_Addr,4},
     };
 
 }
@@ -833,8 +833,11 @@ void CPU::LSR(){
     pPBC = 0; 
 }
 
-
+/*
+    No Operation instruction: causes no chnages to to the processor
+*/
 void CPU::NOP(){}
+
 /*
     Logical Inclusive OR instruction: an inclusive OR is performed bit by bit on the accumulator using the contents of a byte of memory
     the zero flag is set if A = 0, N flag set if bit 7 is set. Possibility of page boundary crossed. 
@@ -963,7 +966,8 @@ void CPU::RTS(){
 
 }
 /*
-    
+    Subtract with Carry instruction: Subtarcts the contents of a memory location to the accumulator together with the 
+    not of the carry bit. If overflow occurs the carry bit is clear. 
 */
 
 void CPU::SBC(){}
