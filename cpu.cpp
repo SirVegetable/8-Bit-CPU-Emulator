@@ -560,7 +560,7 @@ void CPU::BPL(){
     Note: Program counter is incremented by 2 so it points to the second byte after the opcode
 */
 void CPU::BRK(){
-    ProgramCounter += 2;
+    ProgramCounter ++;
 
     BIT_SET(StatusRegister,ID,1);
     push((ProgramCounter >> 8) & 0x00FF);
@@ -951,7 +951,21 @@ void CPU::RTI(){
     pPBC = 0; 
     
 }
-void CPU::RTS(){}
+/*
+    Return from from subroutine: Used at the end of a subroutine to return to the calling routine. It pops the program 
+    counter from the stack. 
+*/
+void CPU::RTS(){
+    Byte lowByte = pop();
+    Byte highByte = pop(); 
+    ProgramCounter = (highByte << 8) | lowByte;
+    pPBC = 0; 
+
+}
+/*
+    
+*/
+
 void CPU::SBC(){}
 /*
     Set Carry Flag instruction: set the carry flag 
