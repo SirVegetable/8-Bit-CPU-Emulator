@@ -7,7 +7,8 @@ CPU::CPU()
 {
     lookup =
     {
-            {&CPU::BRK,&CPU::IMP_Addr,7}, {&CPU::ORA, &CPU::IZPX_Addr, 6}, {&CPU::IOC,&CPU::IMM_Addr,2},{&CPU::IOC, &CPU::IZPX_Addr, 8},{&CPU::NOP,&CPU::ZP_Addr,3},{&CPU::ORA, &CPU::ZP_Addr, 3}, {&CPU::ASL, &CPU::ZP_Addr, 5},{&CPU::IOC,&CPU::ZP_Addr,5}, {&CPU::PHP, &CPU::IMP_Addr, 3}, {&CPU::ORA, &CPU::IMM_Addr, 2}, {&CPU::ASL, &CPU::IMM_Addr, 2}, {&CPU::IOC, &CPU::IMM_Addr,2}, {&CPU::NOP, &CPU::ABS_Addr,4}, {&CPU::ORA, &CPU::ABS_Addr,4}, {&CPU::ASL, &CPU::ABS_Addr, 6}, {&CPU::IOC, &CPU::ABS_Addr, 6},
+            {&CPU::BRK, &CPU::IMP_Addr, 7}, {&CPU::ORA, &CPU::IZX_Addr, 6}, {&CPU::IOC, &CPU::IMP_Addr, 2}, {&CPU::IOC, &CPU::IZX_Addr, 8}, {&CPU::NOP, &CPU::ZPO_Addr, 3}, {&CPU::ORA, &CPU::ZPO_Addr, 3}, {&CPU::ASL, &CPU::ZPO_Addr, 5}, {&CPU::IOC, &CPU::ZPO_Addr, 5}, {&CPU::PHP, &CPU::IMP_Addr, 3}, {&CPU::ORA, &CPU::IMM_Addr, 2}, {&CPU::ASL, &CPU::IMM_Addr, 2}, {&CPU::IOC, &CPU::IMM_Addr, 2}, {&CPU::NOP, &CPU::ABS_Addr, 4}, {&CPU::ORA, &CPU::ABS_Addr, 4}, {&CPU::ASL, &CPU::ABS_Addr, 6}, {&CPU::IOC, &CPU::ABS_Addr, 6},
+            {&CPU::BPL, &CPU::REL_Addr, 2}, {&CPU::ORA, &CPU::IZY_Addr, 5}, {&CPU::IOC, &CPU::IMP_Addr, 2}, {&CPU::IOC, &CPU::IZY_Addr, 8}, {&CPU::NOP, &CPU::ZPX_Addr, 3}, {&CPU::ORA, &CPU::ZPX_Addr, 4}, {&CPU::ASL, &CPU::ZPX_Addr, 6}, {&CPU::IOC, &CPU::ZPX_Addr, 6}, {&CPU::CLC, &CPU::IMP_Addr, 2}, {&CPU::ORA, &CPU::ABY_Addr, 4}, {&CPU::NOP, &CPU::IMP_Addr, 2}, {&CPU::IOC, &CPU::ABS_Addr, 7}, {&CPU::NOP, &CPU::ABX_Addr, 4}, {&CPU::ORA, &CPU::ABX_Addr, 4}, {&CPU::ASL, &CPU::ABX_Addr, 7}, {&CPU::IOC, &CPU::ABX_Addr, 7},
             
     };
 
@@ -205,7 +206,7 @@ void CPU::ABS_Addr(){
     we can check if the a page boundary is crossed if the highbyte changes after the X register is
     added. 
 */
-void CPU::ABSX_Addr(){
+void CPU::ABX_Addr(){
     Rock lowByte = read(ProgramCounter);
     ProgramCounter++; 
     Rock highByte = read(ProgramCounter);
@@ -229,7 +230,7 @@ void CPU::ABSX_Addr(){
     we can check if the a page boundary is crossed if the highbyte changes after the X register is
     added. 
 */
-void CPU::ABSY_Addr(){
+void CPU::ABY_Addr(){
     Rock lowByte = read(ProgramCounter);
     ProgramCounter++; 
     Rock highByte = read(ProgramCounter);
@@ -279,7 +280,7 @@ void CPU::IND_Addr(){
     taken from the instruction and the X register added with it(zero pge wrapped) to give the location of the least significant 
     byte of the target address. 
 */
-void CPU::IZPX_Addr(){
+void CPU::IZX_Addr(){
     Rock addressTable = read(ProgramCounter); 
     ProgramCounter++; 
     addressTable += X; 
@@ -295,7 +296,7 @@ void CPU::IZPX_Addr(){
     the contents of the Y register is added to that. If the addition of the Y address changes the highByte then a page boundary
     has been crossed. 
 */
-void CPU::IZPY_Addr(){
+void CPU::IZY_Addr(){
     Rock addressTable = read(ProgramCounter);
     ProgramCounter++;
     Rock lowByte = read(addressTable & 0x00FF);
@@ -317,7 +318,7 @@ void CPU::IZPY_Addr(){
     be the first 256 bytes of memory ($0000 - $00FF). Meaning the significant byte is always zero and only one read occurs to
     the low void. 
 */ 
-void CPU::ZP_Addr(){
+void CPU::ZPO_Addr(){
     Rock lowByte = read(ProgramCounter);
     ProgramCounter++;
     Rock highByte = 0x00;
@@ -850,7 +851,7 @@ void CPU::ORA(){
     BIT_SET(StatusRegister, Z , (Accum == 0x00));
     BIT_SET(StatusRegister, N , (Accum & (1 << 6) != 0));
 
-    pPBC = 0; 
+    pPBC = 1; 
 
 }
 

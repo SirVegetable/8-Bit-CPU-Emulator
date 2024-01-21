@@ -72,10 +72,10 @@ private:
 
 private: 
     // --------------Adressing modes--------------
-    void  IMP_Addr();   void  IMM_Addr();   void  ABS_Addr(); 
-    void  ABSX_Addr();  void  ABSY_Addr();  void  IND_Addr(); 
-    void  IZPX_Addr();  void  IZPY_Addr();  void  ZP_Addr(); 
-    void  ZPX_Addr();   void  ZPY_Addr();   void  REL_Addr();
+    void  IMP_Addr();  void  IMM_Addr();  void  ABS_Addr(); 
+    void  ABX_Addr();  void  ABY_Addr();  void  IND_Addr(); 
+    void  IZX_Addr();  void  IZY_Addr();  void  ZPO_Addr(); 
+    void  ZPX_Addr();  void  ZPY_Addr();  void  REL_Addr();
      
 
 
