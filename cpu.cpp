@@ -53,8 +53,8 @@ void CPU::Reset(){
 */
 void CPU::InterruptRequest(){
     if(BIT_GRAB(StatusRegister,ID) == 0){
-        push((ProgramCounter >> 8 ) & 0x00FF);        // Pushing the lowbytes to the stack 
-        push((ProgramCounter & 0x00FF));              // Pushing the highbytes to the stack
+        push((ProgramCounter >> 8 ) & 0x00FF);        // Pushing the high bytes to the stack 
+        push((ProgramCounter & 0x00FF));              // Pushing the low bytes to the stack
         BIT_SET(StatusRegister ,B , 0);               // Shows this was a hardware interrupt not a program interrupt
         BIT_SET(StatusRegister, ID , 1);              // Interrupt Disabled bit set 
         BIT_SET(StatusRegister, U , 1)                // Unused bit set to known state
@@ -77,8 +77,8 @@ void CPU::InterruptRequest(){
     from location 0xFFFA. But you do not need to check the Interrupt Disable flag since it is non-maskable.
 */
 void CPU::NonMaskableInterrupt(){
-    push((ProgramCounter >> 8) & 0x00FF);        // Push the lowbytes to the stack
-    push((ProgramCounter & 0x00FF));             // Push the highbytes to the stack
+    push((ProgramCounter >> 8) & 0x00FF);        // Push the high bytes to the stack
+    push((ProgramCounter & 0x00FF));             // Push the low bytes to the stack
 
     BIT_SET(StatusRegister, B , 0);              // Shows this was a hardware interrupt not a program interrupt
     BIT_SET(StatusRegister, U , 1);              // Set Unused bit to a known state
@@ -937,9 +937,20 @@ void CPU::ROR(){
 }
 
 /*
-    Return From Interrupt instruction: 
+    Return From Interrupt instruction: Used at the end of an interrupt processing routine. It pops the processor flags from the stack and 
+    then pops the program counter from the stack. 
 */
-void CPU::RTI(){}
+void CPU::RTI(){
+    StatusRegister = pop();
+    // Not necessary since interrupts set to flags 0 but just to be sure setting B to 0 and U to 0 for clear state. 
+    BIT_SET(StatusRegister, U , 0);
+    BIT_SET(StatusRegister, B , 0); 
+    Byte lowByte = pop(); 
+    Byte highByte = pop(); 
+    ProgramCounter = (highByte << 8) | (lowByte);
+    pPBC = 0; 
+    
+}
 void CPU::RTS(){}
 void CPU::SBC(){}
 /*
