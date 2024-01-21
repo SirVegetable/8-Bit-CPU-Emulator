@@ -894,8 +894,9 @@ void CPU::PLP(){
 }
 /*
     Rotate Left instruction: Move each of the bits in either A or M one place to the left. Bit 0 is filled with the current value of the 
-    carry flag while the old bit 7 becomes the new carry flag value. Set negative flag if bit 7 of the result is set. If the addressing 
-    mode is IMP then the rotate is performed on the Accumulator, otherwise perform on memory data and write back to memory. 
+    carry flag while the old bit 7 becomes the new carry flag value. Set negative flag if bit 7 of the result is set, set the zero flag if
+    the result is 0. If the addressing mode is IMP then the rotate is performed on the Accumulator, otherwise perform on memory data and 
+    write back to memory. 
 
 */
 void CPU::ROL(){
@@ -903,6 +904,7 @@ void CPU::ROL(){
     Rock rotatedData = static_cast<Rock>(fetchedData << 1) | BIT_GRAB(StatusRegister, C);
     BIT_SET(StatusRegister, C , rotatedData & 0x0100); 
     BIT_SET(StatusRegister, N , rotatedData & 0x80);
+    BIT_SET(StatusRegister, Z , rotatedData & 0x00FF == 0x0000);
     if(lookup[opcode].addr_mode == &CPU::IMP_Addr){
         Accum = rotatedData & 0x00FF; 
     }
@@ -911,7 +913,32 @@ void CPU::ROL(){
     }
     pPBC = 0; 
 }
-void CPU::ROR(){}
+/*
+    Rotate Right instruction: Move each of the bits in either A or M one place to the right. Bit 7 is filled with the current value of the 
+    carry flag whilst the old bit 0 becomes the new carry flag value.  Set negative flag if bit 7 of the result is set, set the zero flag 
+    if the result is 0. If the addressing mode is IMP then the rotate is performed on the Accumulator, otherwise perform on memory data and 
+    write back to memory. 
+*/
+void CPU::ROR(){
+    fetchedData = fetch(); 
+    Rock rotatedData = static_cast<Rock>(fetchedData >> 1) | (BIT_GRAB(StatusRegister, C) << 6);
+    BIT_SET(StatusRegister, C , fetchedData & 0x01);
+    BIT_SET(StatusRegister, N , rotatedData & 0x80);
+    BIT_SET(StatusRegister, Z , rotatedData & 0x00FF == 0x0000);
+    if(lookup[opcode].addr_mode == &CPU::IMP_Addr){
+        Accum = rotatedData & 0x00FF;
+    }
+    else{
+        write(targetAddress, rotatedData & 0x00FF);
+    }
+
+    pPBC = 0; 
+    
+}
+
+/*
+    Return From Interrupt instruction: 
+*/
 void CPU::RTI(){}
 void CPU::RTS(){}
 void CPU::SBC(){}
