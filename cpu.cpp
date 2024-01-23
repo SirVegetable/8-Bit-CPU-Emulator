@@ -173,8 +173,12 @@ void CPU::execute(){
         bool pPBC1 = pPBC;                     // Save the state of pPBC after addressing mode is called
         (this->*lookup[opcode].instruction)(); // Call the opcode instruction
         bool pPBC2 = pPBC;                     // Save the state of pPBC after instruction is called
+        cycles += (pPBC1 & pPBC2);             // Increment for an additional cycle if both addr mode and instruction indicate a pPBC
+        
 
     }
+    ticks++;                                   // Increment our global clock 
+    cycles--;                                  // decrement the cycles remaining for the instruction
 }
 
 // --------ADDRESSING MODES----------
