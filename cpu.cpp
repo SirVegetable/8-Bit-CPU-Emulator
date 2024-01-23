@@ -21,7 +21,7 @@ CPU::CPU()
             {&CPU::BCS, &CPU::REL_Addr, 2}, {&CPU::LDA, &CPU::IZY_Addr, 5}, {&CPU::IOC, &CPU::IMM_Addr, 2}, {&CPU::IOC, &CPU::IZY_Addr, 5}, {&CPU::LDY, &CPU::ZPX_Addr, 4}, {&CPU::LDA, &CPU::ZPX_Addr, 4}, {&CPU::LDX, &CPU::ZPY_Addr, 4}, {&CPU::IOC, &CPU::ZPY_Addr, 4}, {&CPU::CLV, &CPU::IMP_Addr, 2}, {&CPU::LDA, &CPU::ABY_Addr, 4}, {&CPU::TSX, &CPU::IMP_Addr, 2}, {&CPU::IOC, &CPU::ABY_Addr, 4}, {&CPU::LDY, &CPU::ABX_Addr, 4}, {&CPU::LDA, &CPU::ABX_Addr, 4}, {&CPU::LDX, &CPU::ABY_Addr, 4}, {&CPU::IOC, &CPU::ABY_Addr, 4},
             {&CPU::CPY, &CPU::IMM_Addr, 2}, {&CPU::CMP, &CPU::IZX_Addr, 6}, {&CPU::NOP, &CPU::IMM_Addr, 2}, {&CPU::IOC, &CPU::IZX_Addr, 8}, {&CPU::CPY, &CPU::ZPO_Addr, 3}, {&CPU::CMP, &CPU::ZPO_Addr, 3}, {&CPU::DEC, &CPU::ZPO_Addr, 5}, {&CPU::IOC, &CPU::ZPO_Addr, 5}, {&CPU::INY, &CPU::IMP_Addr, 2}, {&CPU::CMP, &CPU::IMM_Addr, 2}, {&CPU::DEX, &CPU::IMP_Addr, 2}, {&CPU::IOC, &CPU::IMM_Addr, 2}, {&CPU::CPY, &CPU::ABS_Addr, 4}, {&CPU::CMP, &CPU::ABS_Addr, 4}, {&CPU::DEC, &CPU::ABS_Addr, 6}, {&CPU::IOC, &CPU::ABS_Addr, 6},
             {&CPU::BNE, &CPU::REL_Addr, 2}, {&CPU::CMP, &CPU::IZY_Addr, 5}, {&CPU::IOC, &CPU::IMM_Addr, 2}, {&CPU::IOC, &CPU::IZY_Addr, 8}, {&CPU::NOP, &CPU::ZPX_Addr, 4}, {&CPU::CMP, &CPU::ZPX_Addr, 4}, {&CPU::DEC, &CPU::ZPX_Addr, 6}, {&CPU::IOC, &CPU::ZPX_Addr, 6}, {&CPU::CLD, &CPU::IMP_Addr, 2}, {&CPU::CMP, &CPU::ABY_Addr, 4}, {&CPU::NOP, &CPU::IMP_Addr, 2}, {&CPU::IOC, &CPU::ABY_Addr, 7}, {&CPU::NOP, &CPU::ABX_Addr, 4}, {&CPU::CMP, &CPU::ABX_Addr, 4}, {&CPU::DEC, &CPU::ABX_Addr, 7}, {&CPU::IOC, &CPU::ABX_Addr, 7},
-            {&CPU::CPX, &CPU::IMM_Addr, 2}, {&CPU::SBC, &CPU::IZX_Addr, 6}, {&CPU::NOP, &CPU::IMM_Addr, 2}, {&CPU::IOC, &CPU::IZX_Addr, 8}, {&CPU::CPX, &CPU::ZPO_Addr, 3}, {&CPU::SBC, &CPU::ZPO_Addr, 3}, {&CPU::INC, &CPU::ZPO_Addr, 5}, {&CPU::IOC, &CPU::ZPO_Addr, 5}, {&CPU::INX, &CPU::IMP_Addr, 2}, {&CPU::SBC, &CPU::IMM_Addr, 2}, {&CPU::NOP, &CPU::IMP_Addr, 2}, {&CPU::SBC, &CPU::IMM_Addr, 2}, {&CPU::CPX, &CPU::ABS_Addr, 4}, {&CPU::SBC, &CPU::ABS_Addr, 4}, {&CPU::INC, &CPU::ABS_Addr, 6}, {&CPU::IOC, &CPU::ABS_Addr, 6},
+            {&CPU::CPX, &CPU::IMM_Addr, 2}, {&CPU::SBC, &CPU::IZX_Addr, 6}, {&CPU::NOP, &CPU::IMM_Addr, 2}, {&CPU::IOC, &CPU::IZX_Addr, 8}, {&CPU::CPX, &CPU::ZPO_Addr, 3}, {&CPU::SBC, &CPU::ZPO_Addr, 3}, {&CPU::INC, &CPU::ZPO_Addr, 5}, {&CPU::IOC, &CPU::ZPO_Addr, 5}, {&CPU::INX, &CPU::IMP_Addr, 2}, {&CPU::IOC, &CPU::IMM_Addr, 2}, {&CPU::NOP, &CPU::IMP_Addr, 2}, {&CPU::SBC, &CPU::IMM_Addr, 2}, {&CPU::CPX, &CPU::ABS_Addr, 4}, {&CPU::SBC, &CPU::ABS_Addr, 4}, {&CPU::INC, &CPU::ABS_Addr, 6}, {&CPU::IOC, &CPU::ABS_Addr, 6},
             {&CPU::BEQ, &CPU::REL_Addr, 2}, {&CPU::SBC, &CPU::IZY_Addr, 5}, {&CPU::IOC, &CPU::IMM_Addr, 2}, {&CPU::IOC, &CPU::IZY_Addr, 8}, {&CPU::NOP, &CPU::ZPX_Addr, 4}, {&CPU::SBC, &CPU::ZPX_Addr, 4}, {&CPU::INC, &CPU::ZPX_Addr, 4}, {&CPU::IOC, &CPU::ZPX_Addr, 8}, {&CPU::SED, &CPU::IMP_Addr, 2}, {&CPU::SBC, &CPU::ABY_Addr, 4}, {&CPU::NOP, &CPU::IMP_Addr, 2}, {&CPU::IOC, &CPU::ABY_Addr, 7}, {&CPU::NOP, &CPU::ABX_Addr, 4}, {&CPU::SBC, &CPU::ABX_Addr, 4}, {&CPU::INC, &CPU::ABX_Addr, 7}, {&CPU::IOC, &CPU::ABX_Addr, 7},
     };
 
@@ -849,9 +849,26 @@ void CPU::LSR(){
 }
 
 /*
-    No Operation instruction: causes no chnages to to the processor
+    No Operation instruction: causes no changes to to the processor, there are certain illegal NOP isntructions that could potentially
+    cross a page boundary and those cases will be implemented, these are in the opcode table linked below: 
+    http://www.oxyron.de/html/opcodes02.html
 */
-void CPU::NOP(){}
+void CPU::NOP(){
+    switch (opcode)
+    {
+    case 0x1C:
+    case 0x3C:
+    case 0x5C:
+    case 0x7C:
+    case 0xDC:
+    case 0xFC:
+        pPBC = 1; 
+        break;
+
+    }
+    pPBC = 0; 
+
+}
 
 /*
     Logical Inclusive OR instruction: an inclusive OR is performed bit by bit on the accumulator using the contents of a byte of memory

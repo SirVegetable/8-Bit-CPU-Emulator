@@ -91,7 +91,7 @@ private:
     void  STX(); void  STY(); void  TAX(); void  TAY(); void  TSX(); void  TXA(); void  TXS(); void  TYA(); 
     
 
-    // function to encompass most all Ilegal opcodes except the NOP ones.
+    // function to encompass most of the Ilegal opcodes except the NOP ones.
     void  IOC(); 
 
 }; 
