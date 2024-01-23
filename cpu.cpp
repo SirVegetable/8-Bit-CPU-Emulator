@@ -998,11 +998,27 @@ void CPU::RTS(){
 
 }
 /*
-    Subtract with Carry instruction: Subtarcts the contents of a memory location to the accumulator together with the 
-    not of the carry bit. If overflow occurs the carry bit is clear. 
+    Subtract with Carry instruction: Subtracts the contents of a memory location to the accumulator together with the 
+    not of the carry bit. If overflow occurs the carry bit is clear. Going to handle this differently then the ADC 
+    instruction using the signed complement and inverting the bits of the memory contents and adding one to make a 
+    positive signed number negative,Ex: 
+
+    7 = 000000111 ==> 7 ^ 0x00FF = 
 */
 
-void CPU::SBC(){}
+void CPU::SBC(){
+    fetchedData = fetch();
+    Rock cFlagValue = BIT_GRAB(StatusRegister, C);
+    Rock inverted = (static_cast<Rock>(fetchedData)) ^ 0x00FF; 
+    Rock subtracted = static_cast<Rock>(Accum) + inverted + cFlagValue;
+    BIT_SET(StatusRegister, C , subtracted & 0xFF00);
+    BIT_SET(StatusRegister, Z , ((subtracted & 0x00FF) == 0));
+    bool overflowCheck = (subtracted ^(static_cast<Rock>(Accum))) ^ (subtracted ^ inverted) & 0x0080; 
+    BIT_SET(StatusRegister, OV , overflowCheck);
+    BIT_SET(StatusRegister, N , subtracted & 0x0080);
+    pPBC = 1; 
+
+}
 /*
     Set Carry Flag instruction: set the carry flag 
 */
